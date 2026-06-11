@@ -1,0 +1,1257 @@
+{
+  "title": "Claude on AWS - Deployment Guide",
+  "description": "Interactive guide for deploying Claude across different AWS offerings",
+  "tabs": [
+    {
+      "id": "enterprise",
+      "label": "Claude for Enterprise on AWS",
+      "icon": "building",
+      "subtabs": [
+        {
+          "id": "enterprise-subscribe",
+          "label": "Subscribing to Claude for Enterprise",
+          "layout": "checklist",
+          "nav_buttons": [
+            "next:enterprise-admin-setup"
+          ],
+          "content": {
+            "heading": "Subscribing to Claude for Enterprise on AWS Marketplace",
+            "description": "Choose your subscription path to get started with Claude Enterprise on AWS. All paths lead to the same product — the difference is pricing and procurement process.",
+            "options": [
+              {
+                "title": "Self-Serve via AWS Marketplace",
+                "items": [
+                  "Minimum **20 seats** required",
+                  "Single seat type: Enterprise seat (includes Claude web, desktop, mobile + Claude Code)",
+                  "Billed annually, per user per month",
+                  "Add seats anytime — prorated for remainder of billing cycle, charged immediately",
+                  "Seat reductions only take effect at annual renewal"
+                ]
+              },
+              {
+                "title": "Adding Incremental Seats",
+                "items": [
+                  "Go to **Organization settings → Billing**",
+                  "Click the pencil icon under **Seats**",
+                  "Enter the number of additional seats needed",
+                  "Review the prorated charge and confirm",
+                  "Alternatively: a seat is auto-purchased when inviting a new member if none are available"
+                ]
+              },
+              {
+                "title": "Private Offer",
+                "items": [
+                  "Work with your Anthropic account team to request a private offer",
+                  "Private offer appears in **AWS Marketplace → Manage subscriptions**",
+                  "Review terms, pricing, and seat count in the offer details",
+                  "Accept the offer in AWS Marketplace to activate your subscription"
+                ]
+              }
+            ],
+            "callout": {
+              "type": "info",
+              "text": "💡 **Note:** Once subscribed through any approach, the Primary Owner receives a setup email from Anthropic to create the workspace. Proceed to the \"Setup Claude for Enterprise (with Entra ID)\" tab for next steps."
+            }
+          }
+        },
+        {
+          "id": "enterprise-admin-setup",
+          "label": "Setup Claude for Enterprise (with Entra ID)",
+          "layout": "guided-steps",
+          "nav_buttons": [
+            "prev:enterprise-subscribe"
+          ],
+          "content": {
+            "heading": "Setup Claude for Enterprise (with Entra ID)",
+            "description": "Follow these steps sequentially to configure your Claude Enterprise workspace.",
+            "steps": [
+              {
+                "id": "admin-step-0",
+                "title": "Pre-requisites",
+                "description": "This guide assumes **Microsoft Entra ID** as your identity provider (IdP). Ensure the following teams and decisions are in place before proceeding.",
+                "items": [
+                  "**Infra / Cloud team** — will own the AWS Marketplace subscription and serve as the Primary Owner of the Claude workspace",
+                  "**Identity team** — manages Microsoft Entra ID; will configure SSO (SAML 2.0) and optionally SCIM provisioning",
+                  "**Domain verification** — add a DNS TXT record for your company domain (required before SSO can be enabled)",
+                  "**Enterprise Application** — create a new Enterprise App in Entra ID for Claude (SAML 2.0)",
+                  "**SCIM provisioning (optional)** — requires Entra ID P1 or P2 license; enables automatic user sync",
+                  "**User/Group assignment** — identify which Entra groups or users will be assigned access to Claude"
+                ],
+                "callouts": [
+                  {
+                    "type": "warning",
+                    "text": "⚠️ **Identify your Primary Owner:** There can be only one Primary Owner per workspace. This person is the super-user with full billing and admin control. You can have multiple Admins, but only one Primary Owner. Choose carefully — this should be someone from your Infra/Cloud team."
+                  }
+                ],
+                "subsections": [
+                  {
+                    "title": "🔐 Identity Team Preparedness",
+                    "description": "Brief your Identity team on what they'll need to do. They can start prepping in parallel while the Infra team handles subscription + Primary Owner setup:",
+                    "items": [
+                      "**Domain verification** — add a DNS TXT record for your company domain (required before SSO can be enabled)",
+                      "**Enterprise Application** — create a new Enterprise App in Entra ID for Claude (SAML 2.0)",
+                      "**SCIM provisioning (optional)** — requires Entra ID P1 or P2 license; enables automatic user sync",
+                      "**User/Group assignment** — identify which Entra groups or users will be assigned access to Claude"
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "admin-step-1",
+                "title": "Step 1: Primary Owner Setup",
+                "description": "The admin contact from the deal receives a setup email from Anthropic to create the workspace.",
+                "items": [
+                  "Go to **[https://claude.ai/login](https://claude.ai/login)**",
+                  "Create your **workspace name** — this is your org's Claude environment",
+                  "The Primary Owner account uses magic-link (passwordless email) login until SSO is configured"
+                ]
+              },
+              {
+                "id": "admin-step-2",
+                "title": "Step 2: Configure SSO (Single Sign-On)",
+                "description": "Set up SAML 2.0 with Microsoft Entra ID. Expand each sub-step below — note the **owner** badge indicating who performs each action.",
+                "items": [
+                  "Go to [Claude Admin → Identity and access](https://claude.ai/admin-settings/identity)",
+                  "Add your company domain and follow the verification steps",
+                  "Requires adding a DNS TXT record (coordinate with your DNS admin)",
+                  "In Identity and access settings, start the SSO configuration",
+                  "Note the **Entity ID** and **Reply URL (ACS URL)** — share these with your Identity team",
+                  "Keep this flow open while the Identity team configures Entra",
+                  "In Entra Admin Center → Enterprise applications → New application",
+                  "Search for \"Claude\" in gallery, or create your own app named \"Claude\"",
+                  "Select \"Integrate any other application you don’t find in the gallery\"",
+                  "Go to Single sign-on → SAML",
+                  "In Basic SAML Configuration, enter the Entity ID and Reply URL from step 2b",
+                  "Set Sign-on URL: `https://claude.ai/login`",
+                  "In Attributes & Claims, set email claim to `user.mail`",
+                  "Download the **Federation Metadata XML**",
+                  "Identity team shares the Federation Metadata XML with Primary Owner",
+                  "Primary Owner uploads it in the Claude SSO setup flow",
+                  "Complete the connection wizard in Claude",
+                  "Requires Entra ID P1 or P2 license",
+                  "In the app → Provisioning → Set mode to Automatic",
+                  "Enter Tenant URL and Secret Token from Claude setup flow",
+                  "Ensure SCIM email attribute matches SSO email claim (`user.mail`)",
+                  "Set Provisioning Status to On",
+                  "In Users and groups, assign people or groups who should access Claude",
+                  "Trigger a provisioning cycle (if SCIM enabled) and confirm users appear in Claude",
+                  "Have a test user complete SSO login → verify they land in the correct workspace"
+                ],
+                "callouts": [
+                  {
+                    "type": "info",
+                    "text": "📖 Detailed guide: Microsoft Entra ID SSO Setup"
+                  }
+                ],
+                "substeps": [
+                  {
+                    "title": "2a. Verify your domain in Claude",
+                    "items": [
+                      "Go to [Claude Admin → Identity and access](https://claude.ai/admin-settings/identity)",
+                      "Add your company domain and follow the verification steps",
+                      "Requires adding a DNS TXT record (coordinate with your DNS admin)"
+                    ],
+                    "owner": "Primary Owner"
+                  },
+                  {
+                    "title": "2b. Start SSO setup flow in Claude",
+                    "items": [
+                      "In Identity and access settings, start the SSO configuration",
+                      "Note the **Entity ID** and **Reply URL (ACS URL)** — share these with your Identity team",
+                      "Keep this flow open while the Identity team configures Entra"
+                    ],
+                    "owner": "Primary Owner"
+                  },
+                  {
+                    "title": "2c. Create Enterprise Application in Entra",
+                    "items": [
+                      "In Entra Admin Center → Enterprise applications → New application",
+                      "Search for \"Claude\" in gallery, or create your own app named \"Claude\"",
+                      "Select \"Integrate any other application you don’t find in the gallery\""
+                    ],
+                    "owner": "Identity Team"
+                  },
+                  {
+                    "title": "2d. Configure SAML settings",
+                    "items": [
+                      "Go to Single sign-on → SAML",
+                      "In Basic SAML Configuration, enter the Entity ID and Reply URL from step 2b",
+                      "Set Sign-on URL: `https://claude.ai/login`",
+                      "In Attributes & Claims, set email claim to `user.mail`",
+                      "Download the **Federation Metadata XML**"
+                    ],
+                    "owner": "Identity Team"
+                  },
+                  {
+                    "title": "2e. Upload metadata & complete in Claude",
+                    "items": [
+                      "Identity team shares the Federation Metadata XML with Primary Owner",
+                      "Primary Owner uploads it in the Claude SSO setup flow",
+                      "Complete the connection wizard in Claude"
+                    ],
+                    "owner": "Both Teams"
+                  },
+                  {
+                    "title": "2f. Configure SCIM provisioning (optional)",
+                    "items": [
+                      "Requires Entra ID P1 or P2 license",
+                      "In the app → Provisioning → Set mode to Automatic",
+                      "Enter Tenant URL and Secret Token from Claude setup flow",
+                      "Ensure SCIM email attribute matches SSO email claim (`user.mail`)",
+                      "Set Provisioning Status to On"
+                    ],
+                    "owner": "Identity Team"
+                  },
+                  {
+                    "title": "2g. Assign users/groups & verify",
+                    "items": [
+                      "In Users and groups, assign people or groups who should access Claude",
+                      "Trigger a provisioning cycle (if SCIM enabled) and confirm users appear in Claude",
+                      "Have a test user complete SSO login → verify they land in the correct workspace"
+                    ],
+                    "owner": "Identity Team"
+                  }
+                ]
+              },
+              {
+                "id": "admin-step-3",
+                "title": "Step 3: Invite Users",
+                "description": "How users get access depends on whether SSO is configured yet.",
+                "items": [
+                  "**Pre-SSO:** Manually invite early users via the Admin Console (they'll use magic-link login)",
+                  "**Post-SSO:** End users go to [claude.ai/login](https://claude.ai/login) → enter company email → get redirected through your corporate IdP automatically",
+                  "**With SCIM:** Users are auto-provisioned when assigned in your IdP — no manual invites needed",
+                  "**With JIT (Just-in-Time):** Users are created on first SSO login if they match the verified domain"
+                ],
+                "callouts": [
+                  {
+                    "type": "info",
+                    "text": "✅ **Done!** Your Claude Enterprise workspace is now configured. Users on your domain can access Claude at claude.ai/login using company credentials."
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "enterprise-migration",
+          "label": "Migration Scenarios",
+          "layout": "checklist",
+          "nav_buttons": [
+            "prev:enterprise-admin-setup"
+          ],
+          "content": {
+            "heading": "Migration Scenarios",
+            "description": "Common paths for migrating existing Claude usage to Claude for Enterprise on AWS.",
+            "options": [
+              {
+                "title": "Self-owned Enterprise → Enterprise on AWS Marketplace",
+                "items": [
+                  "Work with Anthropic to **reuse the same workspace UUID**",
+                  "Users and data are retained as-is — no re-provisioning needed",
+                  "Billing moves to AWS Marketplace; workspace stays intact",
+                  "Contact your Anthropic account team to initiate the transfer"
+                ]
+              },
+              {
+                "title": "Domain Claim (Personal & Team Subscriptions)",
+                "items": [
+                  "Works for pre-existing **personal** and **team plan** users on your company email domain",
+                  "Admin initiates domain claim — existing users are notified and absorbed into Enterprise workspace",
+                  "All user data (conversations, projects) migrates automatically",
+                  "Users see a notification and can accept the move or export their data"
+                ]
+              },
+              {
+                "title": "Enterprise-to-Enterprise Migration (Manual)",
+                "items": [
+                  "There is **no built-in tool** to migrate between one Enterprise org and another",
+                  "Use the Project Migration Tool to move projects one-by-one",
+                  "Interactive migration tool will be embedded below when ready"
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "bedrock",
+      "label": "Claude on Amazon Bedrock",
+      "icon": "cloud",
+      "subtabs": [
+        {
+          "id": "bedrock-manual-config",
+          "label": "Manual Config",
+          "layout": "left-nav",
+          "nav_buttons": [
+            "next:bedrock-ccwb"
+          ],
+          "content": {
+            "heading": "Claude on Amazon Bedrock",
+            "description": "Access Claude models as a fully managed API through Amazon Bedrock.",
+            "sections": [
+              {
+                "id": "overview",
+                "label": "Overview",
+                "heading": "Claude Code & Claude Cowork via Amazon Bedrock",
+                "description": "Deploy Claude Code (CLI/IDE AI coding assistant) and Claude Cowork (desktop AI companion) through Amazon Bedrock. All data stays within your AWS boundary — Anthropic never sees prompts or completions.",
+                "content": [
+                  {
+                    "type": "cards",
+                    "items": [
+                      {
+                        "icon": "💻",
+                        "title": "Claude Code",
+                        "items": [
+                          "AI coding assistant (CLI/IDE-integrated) — code generation, review, debugging, refactoring",
+                          "Uses AWS SDK credential chain to authenticate to Bedrock",
+                          "For development teams"
+                        ]
+                      },
+                      {
+                        "icon": "🖥️",
+                        "title": "Claude Cowork",
+                        "items": [
+                          "AI desktop companion app — delegates long-running tasks, works with local files, MCP connectors",
+                          "In-app AWS Sign-in via IAM Identity Center (no CLI needed on end-user machines)",
+                          "For all teams — document analysis, research, workflow automation"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "heading",
+                    "level": 4,
+                    "text": "Architecture Principles"
+                  },
+                  {
+                    "type": "list",
+                    "items": [
+                      "Per-team dedicated AWS accounts for cost isolation and independent governance",
+                      "Centralized identity via IAM Identity Center federated with Microsoft Entra ID",
+                      "Data stays within AWS boundary — Anthropic never sees prompts or completions",
+                      "Team-specific model access and configuration profiles",
+                      "CloudTrail audit logging with per-user attribution"
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "prerequisites",
+                "label": "Prerequisites & Setup",
+                "heading": "Prerequisites & Account Setup",
+                "description": "Foundational setup required before rolling out Claude to any team.",
+                "layout": "guided-steps",
+                "steps": [
+                  {
+                    "id": "bp-step-1",
+                    "title": "AWS Organizations Setup",
+                    "items": [
+                      "AWS Organizations must be configured with a well-defined OU structure",
+                      "**Option A:** Create a dedicated OU for Claude workload accounts (e.g., `OU: AI-Assistants`) — simplifies SCP inheritance",
+                      "**Option B:** Place Claude accounts within existing team/BU OUs — aligns with current org structure but requires per-account SCP attachment",
+                      "Each team gets a dedicated AWS account",
+                      "Management account retains central governance and SCP attachment"
+                    ]
+                  },
+                  {
+                    "id": "bp-step-2",
+                    "title": "IAM Identity Center Configuration",
+                    "items": [
+                      "**Enable IAM Identity Center** in the management account (or delegated admin)",
+                      "**Configure Microsoft Entra ID** as external identity source — SAML 2.0 federation + SCIM provisioning",
+                      "**Create Entra ID Security Groups** per team (e.g., `SG-Claude-TeamAlpha`) for SCIM sync",
+                      "**Set session duration** to 8-12 hours for permission sets (controls re-auth frequency)"
+                    ]
+                  },
+                  {
+                    "id": "bp-step-3",
+                    "title": "Service Control Policies (SCPs)",
+                    "description": "Apply these SCPs to the Claude OU to enforce guardrails across all team accounts:",
+                    "items": [
+                      "Deny `bedrock:InvokeModel` unless InferenceProfileArn matches `us.anthropic.claude-*`",
+                      "Prevents teams from invoking non-Claude or unapproved models",
+                      "Deny `bedrock:PutUseCaseForModelAccess` except for `CentralAdminRole`",
+                      "Prevents teams from enabling additional models without central approval",
+                      "Deny `bedrock:*` unless `aws:RequestedRegion` is in approved list (e.g., us-east-1, us-west-2)",
+                      "Adjust regions based on data residency and latency requirements"
+                    ],
+                    "substeps": [
+                      {
+                        "title": "Restrict Bedrock to Approved Models Only",
+                        "items": [
+                          "Deny `bedrock:InvokeModel` unless InferenceProfileArn matches `us.anthropic.claude-*`",
+                          "Prevents teams from invoking non-Claude or unapproved models"
+                        ],
+                        "code": {
+                          "language": "JSON",
+                          "content": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [{\n    \"Sid\": \"DenyNonClaudeModels\",\n    \"Effect\": \"Deny\",\n    \"Action\": [\"bedrock:InvokeModel\", \"bedrock:InvokeModelWithResponseStream\"],\n    \"Resource\": \"*\",\n    \"Condition\": {\n      \"StringNotLike\": {\n        \"bedrock:InferenceProfileArn\": [\n          \"arn:aws:bedrock:*:*:inference-profile/us.anthropic.claude-*\",\n          \"arn:aws:bedrock:*:*:application-inference-profile/*\"\n        ]\n      }\n    }\n  }]\n}"
+                        }
+                      },
+                      {
+                        "title": "Deny Model Access Changes",
+                        "items": [
+                          "Deny `bedrock:PutUseCaseForModelAccess` except for `CentralAdminRole`",
+                          "Prevents teams from enabling additional models without central approval"
+                        ],
+                        "code": {
+                          "language": "JSON",
+                          "content": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [{\n    \"Sid\": \"DenyModelAccessChanges\",\n    \"Effect\": \"Deny\",\n    \"Action\": [\"bedrock:PutUseCaseForModelAccess\"],\n    \"Resource\": \"*\",\n    \"Condition\": {\n      \"StringNotLike\": {\n        \"aws:PrincipalArn\": \"arn:aws:iam::*:role/CentralAdminRole\"\n      }\n    }\n  }]\n}"
+                        }
+                      },
+                      {
+                        "title": "Enforce Region Restriction",
+                        "items": [
+                          "Deny `bedrock:*` unless `aws:RequestedRegion` is in approved list (e.g., us-east-1, us-west-2)",
+                          "Adjust regions based on data residency and latency requirements"
+                        ],
+                        "code": {
+                          "language": "JSON",
+                          "content": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [{\n    \"Sid\": \"DenyNonApprovedRegions\",\n    \"Effect\": \"Deny\",\n    \"Action\": [\"bedrock:*\"],\n    \"Resource\": \"*\",\n    \"Condition\": {\n      \"StringNotEquals\": {\n        \"aws:RequestedRegion\": [\"us-east-1\", \"us-west-2\"]\n      }\n    }\n  }]\n}"
+                        }
+                      }
+                    ],
+                    "code_blocks": [
+                      {
+                        "language": "JSON",
+                        "content": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [{\n    \"Sid\": \"DenyNonClaudeModels\",\n    \"Effect\": \"Deny\",\n    \"Action\": [\"bedrock:InvokeModel\", \"bedrock:InvokeModelWithResponseStream\"],\n    \"Resource\": \"*\",\n    \"Condition\": {\n      \"StringNotLike\": {\n        \"bedrock:InferenceProfileArn\": [\n          \"arn:aws:bedrock:*:*:inference-profile/us.anthropic.claude-*\",\n          \"arn:aws:bedrock:*:*:application-inference-profile/*\"\n        ]\n      }\n    }\n  }]\n}"
+                      },
+                      {
+                        "language": "JSON",
+                        "content": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [{\n    \"Sid\": \"DenyModelAccessChanges\",\n    \"Effect\": \"Deny\",\n    \"Action\": [\"bedrock:PutUseCaseForModelAccess\"],\n    \"Resource\": \"*\",\n    \"Condition\": {\n      \"StringNotLike\": {\n        \"aws:PrincipalArn\": \"arn:aws:iam::*:role/CentralAdminRole\"\n      }\n    }\n  }]\n}"
+                      },
+                      {
+                        "language": "JSON",
+                        "content": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [{\n    \"Sid\": \"DenyNonApprovedRegions\",\n    \"Effect\": \"Deny\",\n    \"Action\": [\"bedrock:*\"],\n    \"Resource\": \"*\",\n    \"Condition\": {\n      \"StringNotEquals\": {\n        \"aws:RequestedRegion\": [\"us-east-1\", \"us-west-2\"]\n      }\n    }\n  }]\n}"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "bp-step-4",
+                    "title": "Bedrock Service Limits & Quotas",
+                    "description": "For each new team account, configure:",
+                    "items": [
+                      "Request appropriate model invocation quotas (TPM) based on team size",
+                      "Set up AWS Budgets with alerts at 80% and 100% thresholds",
+                      "Configure CloudWatch alarms for throttling (`InvocationThrottles` metric)",
+                      "Enable Bedrock Invocation Logging to S3 for audit trail"
+                    ],
+                    "table": {
+                      "headers": [
+                        "Team Size",
+                        "Recommended TPM",
+                        "Monthly Budget Alert"
+                      ],
+                      "rows": [
+                        [
+                          "Small (5-15 users)",
+                          "100K-500K TPM",
+                          "$2,000-$5,000"
+                        ],
+                        [
+                          "Medium (15-50 users)",
+                          "500K-2M TPM",
+                          "$5,000-$20,000"
+                        ],
+                        [
+                          "Large (50+ users)",
+                          "2M+ TPM",
+                          "$20,000+"
+                        ]
+                      ]
+                    }
+                  },
+                  {
+                    "id": "bp-step-5",
+                    "title": "Shared Account vs. Dedicated Account",
+                    "description": "If a team plans to use an existing AWS account with Bedrock workloads:",
+                    "items": [
+                      "Review current quota utilization (CloudWatch: InvocationCount, TokenCount, InvocationThrottles)",
+                      "Assess whether remaining headroom can absorb expected Claude traffic",
+                      "If quota headroom insufficient or workloads are mission-critical → **create a separate dedicated account**",
+                      "If sharing is acceptable → request quota increases + set up Application Inference Profiles for cost separation"
+                    ],
+                    "callouts": [
+                      {
+                        "type": "warning",
+                        "text": "⚠️ **Key Risks of Sharing:** Quota contention, cost attribution complexity, budget alert noise, broader security blast radius."
+                      },
+                      {
+                        "type": "info",
+                        "text": "💡 **Best practice:** Provision a dedicated AWS account per team. Eliminates quota contention, simplifies cost tracking, and ensures precise SCP scoping."
+                      }
+                    ]
+                  },
+                  {
+                    "id": "bp-step-6",
+                    "title": "Anthropic Use Case Submission",
+                    "description": "One-time per account — required before Claude models can be invoked via Bedrock.",
+                    "items": [
+                      "Navigate to Bedrock console > Model catalog",
+                      "Select any Anthropic model and complete the use case form",
+                      "Access granted immediately after submission",
+                      "Create form.json with company details and use case description",
+                      "Run the CLI command below (must target us-east-1)",
+                      "Submitting principal needs `bedrock:PutUseCaseForModelAccess` IAM permission"
+                    ],
+                    "callouts": [
+                      {
+                        "type": "info",
+                        "text": "📋 **Why is this needed?** Anthropic requires every AWS account to submit a brief use-case form before enabling access to Claude models on Bedrock. This is a compliance and responsible-use requirement from Anthropic — it helps them understand how their models are being used and ensures alignment with their Acceptable Use Policy. The form is lightweight (company name, website, intended use case) and access is typically granted immediately upon submission."
+                      }
+                    ],
+                    "substeps": [
+                      {
+                        "title": "Option A: Via AWS Console",
+                        "items": [
+                          "Navigate to Bedrock console > Model catalog",
+                          "Select any Anthropic model and complete the use case form",
+                          "Access granted immediately after submission"
+                        ]
+                      },
+                      {
+                        "title": "Option B: Via CLI (recommended for automation)",
+                        "items": [
+                          "Create form.json with company details and use case description",
+                          "Run the CLI command below (must target us-east-1)",
+                          "Submitting principal needs `bedrock:PutUseCaseForModelAccess` IAM permission"
+                        ],
+                        "code": {
+                          "language": "BASH",
+                          "content": "# Create the form data JSON\ncat  form.json\n{\n  \"companyName\": \"YOUR_COMPANY\",\n  \"companyWebsite\": \"https://www.example.com\",\n  \"intendedUsers\": \"0\",\n  \"industryOption\": \"Customer Service\",\n  \"otherIndustryOption\": \"\",\n  \"useCases\": \"AI-powered productivity tools.\"\n}\nEOF\n\n# Submit (must be us-east-1, must Base64 encode)\naws bedrock put-use-case-for-model-access \\\n  --form-data $(cat form.json | base64) \\\n  --region us-east-1"
+                        }
+                      }
+                    ],
+                    "code_blocks": [
+                      {
+                        "language": "BASH",
+                        "content": "# Create the form data JSON\ncat  form.json\n{\n  \"companyName\": \"YOUR_COMPANY\",\n  \"companyWebsite\": \"https://www.example.com\",\n  \"intendedUsers\": \"0\",\n  \"industryOption\": \"Customer Service\",\n  \"otherIndustryOption\": \"\",\n  \"useCases\": \"AI-powered productivity tools.\"\n}\nEOF\n\n# Submit (must be us-east-1, must Base64 encode)\naws bedrock put-use-case-for-model-access \\\n  --form-data $(cat form.json | base64) \\\n  --region us-east-1"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "bp-step-7",
+                    "title": "New Account Onboarding Checklist",
+                    "table": {
+                      "headers": [
+                        "#",
+                        "Action",
+                        "Owner"
+                      ],
+                      "rows": [
+                        [
+                          "1",
+                          "Create account under Claude OU",
+                          "Cloud Platform"
+                        ],
+                        [
+                          "2",
+                          "Verify SCPs inherited from Claude OU",
+                          "Cloud Platform"
+                        ],
+                        [
+                          "3",
+                          "Submit Anthropic use case form",
+                          "Cloud Platform"
+                        ],
+                        [
+                          "4",
+                          "Create IAM Identity Center permission set",
+                          "Identity Team"
+                        ],
+                        [
+                          "5",
+                          "Assign Entra ID group to permission set + account",
+                          "Identity Team"
+                        ],
+                        [
+                          "6",
+                          "Set up AWS Budgets and cost alerts",
+                          "FinOps"
+                        ],
+                        [
+                          "7",
+                          "Enable CloudTrail + Bedrock invocation logging",
+                          "Security"
+                        ],
+                        [
+                          "8",
+                          "Request and validate Bedrock quota limits",
+                          "Cloud Platform"
+                        ],
+                        [
+                          "9",
+                          "Create application inference profiles (optional)",
+                          "Cloud Platform"
+                        ],
+                        [
+                          "10",
+                          "Test end-to-end auth flow with pilot user",
+                          "Team Lead"
+                        ]
+                      ]
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "claude-code",
+                "label": "Claude Code Deployment",
+                "heading": "Claude Code Deployment",
+                "description": "CLI-based AI coding assistant that integrates into terminal and IDE workflows.",
+                "substeps": [
+                  {
+                    "title": "3.1 IAM Permission Set",
+                    "items": [
+                      "Create permission set in IAM Identity Center with inline policy",
+                      "Grant `bedrock:InvokeModel` + `InvokeModelWithResponseStream`",
+                      "Scope to specific model ARNs: Opus 4.7, Sonnet 4.6, Haiku 4.5",
+                      "Set session duration to 8-12 hours",
+                      "Each model is a separate statement — easy to add/remove per team"
+                    ],
+                    "owner": "Identity Team",
+                    "code": {
+                      "language": "JSON",
+                      "content": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"AllowBedrockClaudeSonnet\",\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"bedrock:InvokeModel\",\n        \"bedrock:InvokeModelWithResponseStream\"\n      ],\n      \"Resource\": [\n        \"arn:aws:bedrock:*:*:inference-profile/us.anthropic.claude-sonnet-4-6*\"\n      ]\n    },\n    {\n      \"Sid\": \"AllowBedrockClaudeOpus\",\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"bedrock:InvokeModel\",\n        \"bedrock:InvokeModelWithResponseStream\"\n      ],\n      \"Resource\": [\n        \"arn:aws:bedrock:*:*:inference-profile/us.anthropic.claude-opus-4-7*\"\n      ]\n    },\n    {\n      \"Sid\": \"AllowBedrockClaudeHaiku\",\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"bedrock:InvokeModel\",\n        \"bedrock:InvokeModelWithResponseStream\"\n      ],\n      \"Resource\": [\n        \"arn:aws:bedrock:*:*:inference-profile/us.anthropic.claude-haiku-4-5*\"\n      ]\n    }\n  ]\n}"
+                    }
+                  },
+                  {
+                    "title": "3.2 Developer Machine Setup",
+                    "items": [
+                      "**Prerequisites:** AWS CLI v2, Claude Code CLI (`npm install -g @anthropic-ai/claude-code`), network access to Bedrock + Identity Center",
+                      "**AWS SSO Profile:** Configure `~/.aws/config` with SSO session, account ID, role name",
+                      "**Environment Variables:** `CLAUDE_CODE_USE_BEDROCK=1`, `AWS_REGION`, `AWS_PROFILE`",
+                      "**Model Pinning:** Set `ANTHROPIC_DEFAULT_SONNET_MODEL`, `ANTHROPIC_DEFAULT_OPUS_MODEL`, etc.",
+                      "Cross-region inference profile IDs (`us.` prefix) recommended for higher availability"
+                    ],
+                    "owner": "Developer"
+                  },
+                  {
+                    "title": "3.3 Managed Settings",
+                    "items": [
+                      "**macOS:** `/Library/Application Support/ClaudeCode/managed-settings.json`",
+                      "**Linux/WSL:** `/etc/claude-code/managed-settings.json`",
+                      "**Windows:** `C:\\Program Files\\ClaudeCode\\managed-settings.json`",
+                      "Controls: permissions (allow/deny), MCP server restrictions, sandbox networking, environment variables",
+                      "Set `allowManagedPermissionRulesOnly: true` and `allowManagedMcpServersOnly: true`"
+                    ],
+                    "owner": "Cloud Platform"
+                  },
+                  {
+                    "title": "3.4 Verification",
+                    "items": [
+                      "`aws sso login --profile claude-code`",
+                      "`claude` — launches Claude Code",
+                      "`/status` — should show \"Amazon Bedrock\" as provider and list pinned models"
+                    ],
+                    "owner": "Developer"
+                  },
+                  {
+                    "title": "3.5 VS Code Extension",
+                    "items": [
+                      "Shares same AWS credential chain as Claude Code CLI",
+                      "If CLI works with SSO profile, extension picks it up automatically",
+                      "Run `claude configure` → select Amazon Bedrock → specify SSO profile",
+                      "Settings stored in `~/.claude/settings.json` — extension reads same config",
+                      "Restart extension if VS Code was open during SSO login"
+                    ],
+                    "owner": "Developer"
+                  }
+                ]
+              },
+              {
+                "id": "cowork",
+                "label": "Claude Cowork Deployment",
+                "heading": "Claude Cowork Deployment",
+                "description": "Desktop AI companion app — all prompts route through your AWS infrastructure.",
+                "substeps": [
+                  {
+                    "title": "4.1 Authentication: In-App AWS Sign-In",
+                    "items": [
+                      "User launches Cowork → \"Sign in with AWS\" page",
+                      "Opens browser for IAM Identity Center device-authorization flow",
+                      "Authenticates via Entra ID (corporate credentials + MFA)",
+                      "Token stored encrypted in OS secure storage",
+                      "Re-auth when session expires (8-12 hours)"
+                    ],
+                    "owner": "Identity Team"
+                  },
+                  {
+                    "title": "4.2 Manual Configuration (Initial Rollout)",
+                    "items": [
+                      "Install Claude Desktop from claude.com/download — **Do NOT sign in**",
+                      "Enable Developer Mode: Help > Troubleshooting > Enable Developer Mode",
+                      "Open: Developer > Configure third-party inference",
+                      "Set: Inference Provider = Bedrock, Region, SSO Start URL, SSO Region, Account ID, Role Name",
+                      "Configure Model List with Bedrock inference profile IDs",
+                      "Click \"Apply Locally\" → app relaunches with \"Sign in with AWS\" option",
+                      "⚠️ Remove `inferenceBedrockProfile` field to enable in-app AWS sign-in"
+                    ],
+                    "owner": "Cloud Platform"
+                  },
+                  {
+                    "title": "4.3 MDM-Based Configuration (Future State)",
+                    "items": [
+                      "Build config on admin machine → Export .mobileconfig (macOS) or .reg (Windows)",
+                      "Deploy config via MDM (Jamf, Intune, Workspace ONE) BEFORE distributing app",
+                      "**macOS:** `/Library/Managed Preferences/com.anthropic.claudefordesktop.plist`",
+                      "**Windows:** `HKLM\\SOFTWARE\\Policies\\Claude`",
+                      "Key benefit: in-app configuration window becomes read-only on managed devices",
+                      "For Intune MSIX deployment: Apps > Windows > Line-of-business > Upload .msix",
+                      "For ADMX policy: Import Claude template, create configuration policy per team"
+                    ],
+                    "owner": "Cloud Platform"
+                  }
+                ]
+              },
+              {
+                "id": "sops",
+                "label": "SOPs",
+                "heading": "Standard Operating Procedures",
+                "description": "Repeatable processes for common administrative actions.",
+                "substeps": [
+                  {
+                    "title": "SOP-1: Onboard New User to Existing Team",
+                    "items": [
+                      "Add user to Entra ID security group → SCIM auto-syncs within 40 min",
+                      "Deploy Claude tools to user machine (CLI + config or Cowork + managed config)",
+                      "User acceptance test → verify end-to-end flow",
+                      "Send onboarding email with usage guidelines"
+                    ],
+                    "owner": "Identity Team"
+                  },
+                  {
+                    "title": "SOP-2: Onboard New Team",
+                    "items": [
+                      "Create dedicated AWS account under Claude OU",
+                      "Submit Anthropic use case form",
+                      "Create Entra ID group + configure SCIM",
+                      "Create permission set + assign group to account",
+                      "Configure budgets, monitoring, quotas",
+                      "Pilot with 3-5 users → full rollout"
+                    ],
+                    "owner": "Cloud Platform + Identity"
+                  },
+                  {
+                    "title": "SOP-3: Modify Model Access",
+                    "items": [
+                      "Evaluate cost impact (Opus ≈ 5x Sonnet per token), quota needs, region availability",
+                      "Update SCP allowed model list if needed",
+                      "Update managed-settings.json and Cowork MDM profiles",
+                      "Adjust budget alerts for new cost profile"
+                    ],
+                    "owner": "Cloud Platform"
+                  },
+                  {
+                    "title": "SOP-4: Revoke User Access",
+                    "items": [
+                      "Remove user from Entra ID security group (SCIM auto-deprovisions)",
+                      "For immediate revocation: delete user session in IAM Identity Center",
+                      "Remove CLI + managed-settings and Cowork app from device",
+                      "Verify via CloudTrail — no post-revocation API calls"
+                    ],
+                    "owner": "Identity Team"
+                  },
+                  {
+                    "title": "SOP-5: Decommission a Team",
+                    "items": [
+                      "Remove all users from Entra group",
+                      "Delete permission set assignment",
+                      "Disable Bedrock model access",
+                      "Archive CloudTrail + invocation logs",
+                      "Close/suspend AWS account (retain for audit period)",
+                      "Remove MDM profiles + delete Entra group"
+                    ],
+                    "owner": "Cloud Platform"
+                  }
+                ]
+              },
+              {
+                "id": "monitoring",
+                "label": "Monitoring & Cost",
+                "heading": "Monitoring & Cost Management",
+                "description": "Track usage, attribute costs, and enforce quotas.",
+                "substeps": [
+                  {
+                    "title": "Cost Attribution (Account + Per-User)",
+                    "items": [
+                      "**Account-level:** Per-team accounts → Cost Explorer shows each team’s spend",
+                      "**Per-user:** Enable \"IAM principal-based cost allocation\" in Cost Explorer",
+                      "Each Identity Center user gets unique role session → per-user spend visibility",
+                      "⚠️ Principal-based allocation is **visibility only**, not enforcement"
+                    ]
+                  },
+                  {
+                    "title": "Quota Enforcement (OTel + Counter Store)",
+                    "items": [
+                      "Claude Code & Cowork export OTel metrics natively (token usage, cost, sessions per user) Custom implementation needed",
+                      "Data flow: Client → OTLP (port 4318) → OTel Collector (ECS Fargate) → CloudWatch/S3",
+                      "Counter store (Redis): aggregate per-user token usage with TTL for auto-reset",
+                      "**Alert only:** SNS notification when threshold exceeded (15 min lag)",
+                      "**Soft block:** Lambda updates IAM deny policy (15-30 min)",
+                      "**Hard block:** Proxy checks Redis pre-request (real-time)"
+                    ]
+                  },
+                  {
+                    "title": "Recommended CloudWatch Alarms",
+                    "items": [
+                      "`InvocationThrottles > 10` in 5 minutes (quota exhaustion)",
+                      "`InvocationErrors > 5%` error rate (configuration issues)",
+                      "Monthly cost exceeds 80% of budget threshold"
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "security",
+                "label": "Security & Compliance",
+                "heading": "Security & Compliance",
+                "description": "Data handling, guardrails, network security, and audit controls.",
+                "substeps": [
+                  {
+                    "title": "Data Handling",
+                    "items": [
+                      "All prompts/completions flow through AWS Bedrock — Anthropic does not store or access them",
+                      "Data stays within AWS security boundary (your VPC/account)",
+                      "Anthropic does NOT train models on your data via Bedrock",
+                      "Zero Data Retention (ZDR) available — nothing stored after request completes"
+                    ]
+                  },
+                  {
+                    "title": "Bedrock Guardrails",
+                    "items": [
+                      "Create Guardrails in Bedrock console: content filtering, PII redaction, topic blocking",
+                      "Safeguards: content filters, denied topics, word filters, sensitive information filters, contextual grounding",
+                      "⚠️ Do NOT enable automated reasoning policy — unsupported, causes runtime failures",
+                      "**Cross-account enforcement:** AWS Organizations Bedrock policies apply guardrails across all team accounts",
+                      "Create guardrail in management account → version it → attach resource-based policy → enable Bedrock Policy Type → attach to Claude OU"
+                    ]
+                  },
+                  {
+                    "title": "Network Security",
+                    "items": [
+                      "Consider AWS PrivateLink for Bedrock endpoints (keeps traffic off public internet)",
+                      "Use sandbox network allowlists in Claude Code/Cowork",
+                      "Ensure corporate firewall allows required AWS endpoint traffic"
+                    ]
+                  },
+                  {
+                    "title": "Audit & Compliance",
+                    "items": [
+                      "CloudTrail: complete audit trail with user identity",
+                      "IAM Identity Center sessions traceable to Entra ID users",
+                      "Bedrock invocation logs capture full request/response",
+                      "Managed settings prevent bypassing organizational controls"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "bedrock-ccwb",
+          "label": "CCWB",
+          "layout": "left-nav",
+          "nav_buttons": [
+            "prev:bedrock-manual-config"
+          ],
+          "content": {
+            "heading": "CCWB (Claude Code WorkBench)",
+            "description": "Deploy Claude Code and Claude Cowork on Amazon Bedrock using IAM Identity Center.",
+            "sections": [
+              {
+                "id": "prerequisites",
+                "label": "Prerequisites & Environment Setup",
+                "heading": "Prerequisites & Environment Setup",
+                "description": "What you need before deploying CCWB with IAM Identity Center.",
+                "stakeholder": "AWS Admin / Cloud Team",
+                "subsections": [
+                  {
+                    "title": "Software Requirements (Admin Machine)",
+                    "items": [
+                      "Python 3.10–3.13",
+                      "Poetry (dependency management)",
+                      "AWS CLI v2",
+                      "Git",
+                      "Go 1.23+ (for cross-platform binary builds)"
+                    ]
+                  },
+                  {
+                    "title": "AWS Requirements",
+                    "items": [
+                      "AWS account with IAM/CloudFormation permissions",
+                      "Amazon Bedrock activated in target regions",
+                      "IAM Identity Center active with users/groups provisioned",
+                      "(Optional) ECS, CloudWatch, Athena, Glue, Lambda, Firehose permissions — for monitoring/analytics"
+                    ]
+                  },
+                  {
+                    "title": "End User Requirements",
+                    "items": [
+                      "Claude Code installed (for CLI users)",
+                      "Claude Desktop installed (for CoWork users)",
+                      "Web browser for SSO authentication",
+                      "No Python/Poetry/Git needed — users get pre-built packages"
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "iam-idc-config",
+                "label": "Configure IAM Identity Center",
+                "heading": "Configure IAM Identity Center",
+                "description": "Set up the native AWS identity path — no external IdP required.",
+                "stakeholder": "AWS Admin / Identity Team",
+                "items": [
+                  "**Verify IAM Identity Center is enabled** — Navigate to AWS IAM Identity Center console and confirm it's active in your management account",
+                  "**Provision users/groups** — Ensure developers who need Claude access exist in IAM Identity Center (synced from AD/Okta/external source or manually created)",
+                  "**Create Permission Set for Bedrock access** — Create a Permission Set with `bedrock:InvokeModel*` permissions scoped to target regions",
+                  "**Assign Permission Set to user/group** — Assign the Permission Set to developer groups on the target AWS account",
+                  "**Set session duration** — Recommended: 7 days (max: 90 days) to minimize re-authentication friction",
+                  "**Distribute SSO start URL** — Share the SSO portal URL and profile name with developers (e.g., `aws sso login --profile bedrock-dev`)"
+                ],
+                "callouts": [
+                  {
+                    "type": "info",
+                    "text": "**💡 Key benefit:** With IAM Identity Center, the CCWB solution auto-detects user identity from the `AWSReservedSSO_*` role ARN — full attribution (name, email, permission set) appears in the observability dashboard without any extra OIDC configuration."
+                  }
+                ]
+              },
+              {
+                "id": "init",
+                "label": "Initialize Profile (`ccwb init`)",
+                "heading": "Initialize Profile (`ccwb init`)",
+                "description": "Clone the repo and run the interactive setup wizard to create a deployment profile.",
+                "stakeholder": "AWS Admin / Cloud Team",
+                "subsections": [
+                  {
+                    "title": "Clone & Install",
+                    "code": {
+                      "language": "bash",
+                      "content": "git clone https://github.com/aws-solutions-library-samples/guidance-for-claude-code-with-amazon-bedrock\ncd guidance-for-claude-code-with-amazon-bedrock/source\npoetry install"
+                    }
+                  },
+                  {
+                    "title": "Run the Wizard",
+                    "code": {
+                      "language": "bash",
+                      "content": "poetry run ccwb init"
+                    }
+                  },
+                  {
+                    "title": "Wizard Choices (IAM IDC Path)",
+                    "items": [
+                      "**Profile name** → e.g. `corp-bedrock-prod`",
+                      "**Enable SSO authentication?** → Select **No** (this refers to CCWB's own OIDC auth stack — select No because your users already authenticate via IAM Identity Center)",
+                      "**AWS Region** → Region for CloudFormation stacks",
+                      "**Stack base name** → Prefix for all stack names (e.g. `claude-code-auth`)",
+                      "**Enable monitoring?** → Yes (recommended) — choose Central Collector or Sidecar",
+                      "**Enable analytics?** → Yes for Athena + S3 data lake",
+                      "**Enable quota monitoring?** → Yes to enforce per-user token limits",
+                      "**Enable Windows builds?** → Yes if you have Windows users",
+                      "**Generate CoWork 3P MDM config?** → Yes for Claude Desktop deployment",
+                      "**Claude model** → Sonnet / Haiku / Opus",
+                      "**Cross-region profile** → US / EU / APAC",
+                      "**Source region** → e.g. `us-east-1`"
+                    ]
+                  }
+                ],
+                "callouts": [
+                  {
+                    "type": "success",
+                    "text": "**What is `ccwb`?** — CCWB (Claude Code WorkBench) is the CLI tool from the [AWS Solutions guidance repo](https://github.com/aws-solutions-library-samples/guidance-for-claude-code-with-amazon-bedrock). It orchestrates the full deployment lifecycle: `init` creates a local profile, `deploy` provisions CloudFormation stacks, `package` builds platform-specific installers, and `distribute` shares them with end users."
+                  },
+                  {
+                    "type": "info",
+                    "text": "**📝 Note:** `ccwb init` only saves configuration locally to `~/.ccwb/profiles/&lt;name&gt;.json`. Nothing is deployed to AWS at this stage."
+                  }
+                ]
+              },
+              {
+                "id": "deploy",
+                "label": "Deploy Infrastructure (`ccwb deploy`)",
+                "heading": "Deploy Infrastructure (`ccwb deploy`)",
+                "description": "Provision AWS CloudFormation stacks based on your profile configuration.",
+                "stakeholder": "AWS Admin / Cloud Team",
+                "subsections": [
+                  {
+                    "title": "What Gets Created (IAM IDC path)",
+                    "items": [
+                      "**Monitoring stack** — VPC, ECS Fargate (OTEL collector), ALB, CloudWatch dashboards",
+                      "**Analytics stack** — Kinesis Firehose → S3 → Glue → Athena (if enabled)",
+                      "**Quota stack** — DynamoDB (limits), Lambda (monitor), SNS (alerts), API Gateway (if enabled)",
+                      "**CodeBuild stack** — Windows .exe compilation (if enabled)"
+                    ]
+                  }
+                ],
+                "callouts": [
+                  {
+                    "type": "success",
+                    "text": "**What `ccwb deploy` does under the hood:** Reads your local profile and creates CloudFormation stacks in your AWS account. Since users already authenticate via IAM Identity Center (`aws sso login`), there's no need for CCWB to deploy its own auth stack (OIDC Provider / Cognito). It deploys only the monitoring, analytics, and quota stacks you enabled."
+                  },
+                  {
+                    "type": "info",
+                    "text": "**⏱️ Deployment time:** 5–15 minutes depending on which stacks are enabled."
+                  }
+                ]
+              },
+              {
+                "id": "package",
+                "label": "Build & Distribute Packages (`ccwb package`)",
+                "heading": "Build & Distribute Packages (`ccwb package`)",
+                "description": "Build platform-specific installers and distribute to end users.",
+                "stakeholder": "AWS Admin / Cloud Team",
+                "subsections": [
+                  {
+                    "title": "Platform Targets",
+                    "items": [
+                      "macOS ARM64 (Apple Silicon M1/M2/M3/M4)",
+                      "macOS Intel (x86_64) — runs on all Macs via Rosetta",
+                      "Linux x86_64 and ARM64",
+                      "Windows x64 (via CodeBuild + Nuitka)"
+                    ]
+                  },
+                  {
+                    "title": "Distribution Options",
+                    "items": [
+                      "**Presigned S3 URLs** — Time-limited download links shared via Slack/email",
+                      "**Authenticated Landing Page** — Self-service portal with SSO login + platform detection",
+                      "**Manual** — Zip the `dist/` folder and share directly"
+                    ]
+                  },
+                  {
+                    "title": "Generate CoWork MDM Configs",
+                    "description": "poetry run ccwb cowork generate⧉ Copy\n          Outputs: cowork-3p.mobileconfig, cowork-3p.reg, cowork-3p-config.json",
+                    "code": {
+                      "language": "bash",
+                      "content": "poetry run ccwb cowork generate"
+                    }
+                  }
+                ],
+                "callouts": [
+                  {
+                    "type": "success",
+                    "text": "**What `ccwb package` does:** Compiles the credential-helper binary for each target platform using Go cross-compilation. The binary handles token refresh, OTEL metric reporting, and AWS credential resolution. The resulting installers configure the user's `~/.aws/config` with a `credential_process` entry pointing to this binary."
+                  }
+                ]
+              },
+              {
+                "id": "mdm-deploy",
+                "label": "MDM Deployment (Claude Cowork / Desktop)",
+                "heading": "MDM Deployment (Claude Cowork / Desktop)",
+                "description": "Deploy Claude Desktop configuration to end-user machines via MDM.",
+                "stakeholder": "IT Admin / MDM Team",
+                "items": [
+                  "**macOS** — Deploy `cowork-3p.mobileconfig` via Jamf / Kandji / Mosyle",
+                  "**Windows** — Deploy `cowork-3p.reg` via Intune / Group Policy (writes to `HKCU\\SOFTWARE\\Policies\\Claude`)",
+                  "**Verify MDM key** — Ensure `inferenceBedrockProfile` points to the correct AWS named profile in `~/.aws/config`",
+                  "**Install order matters** — Users must run the CLI installer (`install.sh` / `install.bat`) *before* opening Claude Desktop, so the named profile exists"
+                ],
+                "callouts": [
+                  {
+                    "type": "warning",
+                    "text": "**⚠️ macOS note:** Unsigned profiles require user approval in System Settings → Privacy & Security → Profiles after delivery."
+                  }
+                ]
+              },
+              {
+                "id": "dev-setup",
+                "label": "Developer Setup",
+                "heading": "Developer Setup",
+                "description": "End-user steps to get Claude Code / Claude Cowork working.",
+                "stakeholder": "End Users / Developers",
+                "subsections": [
+                  {
+                    "title": "Claude Code (CLI)",
+                    "items": [
+                      "Run the installer package provided by IT admin (`install.sh` or `install.bat`)",
+                      "Authenticate with IAM Identity Center: `aws sso login --profile &lt;profile-name&gt;`",
+                      "Start using Claude Code — credentials auto-refresh from IAM Identity Center session"
+                    ]
+                  },
+                  {
+                    "title": "Claude Cowork (Desktop)",
+                    "items": [
+                      "Ensure installer has been run (sets up AWS named profile)",
+                      "Open Claude Desktop — authentication is handled automatically by the credential helper",
+                      "Full Claude Desktop capabilities: Projects, Artifacts, MCP servers"
+                    ]
+                  }
+                ],
+                "callouts": [
+                  {
+                    "type": "info",
+                    "text": "**💡 No API keys needed:** Developers authenticate with their existing corporate credentials via `aws sso login`. Temporary credentials are issued and refreshed automatically."
+                  }
+                ]
+              },
+              {
+                "id": "observability",
+                "label": "Observability",
+                "heading": "Observability",
+                "description": "End-to-end visibility into Claude usage across your organization.",
+                "stakeholder": "Platform / DevOps Team",
+                "subsections": [
+                  {
+                    "title": "Architecture",
+                    "items": [
+                      "**OpenTelemetry (OTLP)** — Credential helper emits metrics on every Bedrock call (tokens, latency, model, user identity)",
+                      "**Central Collector (ECS Fargate)** — Receives OTLP from all developer machines, exports to CloudWatch EMF + Firehose",
+                      "**Sidecar Collector (local)** — Runs on each dev machine, lighter footprint, no VPC needed"
+                    ]
+                  },
+                  {
+                    "title": "Identity Attribution (IAM IDC)",
+                    "items": [
+                      "IAM Identity Center users: real username/email auto-extracted from `AWSReservedSSO_*` role ARN",
+                      "IAM users: username extracted from IAM user ARN",
+                      "Non-SSO assumed roles: hashed anonymous identifier (consistent per principal)"
+                    ]
+                  },
+                  {
+                    "title": "Analytics Pipeline (Optional)",
+                    "items": [
+                      "Kinesis Data Firehose → S3 data lake → Glue Data Catalog → Athena",
+                      "10 pre-built SQL queries for historical analysis",
+                      "90-day hot storage + Glacier archival",
+                      "Use for: chargeback, cost attribution by team/department, trend analysis"
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "monitoring",
+                "label": "Monitoring",
+                "heading": "Monitoring",
+                "description": "CloudWatch dashboards and real-time metrics for Claude usage.",
+                "stakeholder": "Platform / DevOps Team",
+                "subsections": [
+                  {
+                    "title": "Dashboard Metrics (PromQL)",
+                    "items": [
+                      "**Token usage** — Input/output tokens per user, per model, per day",
+                      "**Cost tracking** — Estimated cost per user/team based on token consumption",
+                      "**Model breakdown** — Usage split across Sonnet / Haiku / Opus",
+                      "**Latency** — P50/P95/P99 response times per model",
+                      "**Error rates** — Throttling, failures, quota exhaustion"
+                    ]
+                  },
+                  {
+                    "title": "Infrastructure",
+                    "items": [
+                      "**Central Collector:** ~$30–50/month (VPC + ECS Fargate + ALB)",
+                      "**Sidecar:** $0 server cost (runs locally on each dev machine)",
+                      "HTTPS with custom domain (optional) — ACM cert + Route53"
+                    ]
+                  },
+                  {
+                    "title": "Enable/Update Monitoring",
+                    "code": {
+                      "language": "bash",
+                      "content": "# Re-run init to enable monitoring later\npoetry run ccwb init\n\n# Deploy just the monitoring stack\npoetry run ccwb deploy monitoring"
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "quota",
+                "label": "Quota Management",
+                "heading": "Quota Management",
+                "description": "Enforce per-user and per-group token limits with alerts and blocking.",
+                "stakeholder": "Platform / FinOps Team",
+                "subsections": [
+                  {
+                    "title": "How It Works",
+                    "items": [
+                      "**DynamoDB table** — Stores per-user/group/default token limits",
+                      "**Lambda (every 15 min)** — Checks thresholds via PromQL, sends SNS alerts at 80%, 90%, 100%",
+                      "**API Gateway** — Real-time quota check at credential issuance time"
+                    ]
+                  },
+                  {
+                    "title": "Configuration Options",
+                    "items": [
+                      "**Monthly token limit** — Default: 225M tokens/user/month",
+                      "**Burst buffer** — 5–25% above daily average (default 10%)",
+                      "**Daily enforcement** — `alert` (notify only) or `block` (deny credentials)",
+                      "**Monthly enforcement** — `alert` or `block` (recommended: block)",
+                      "**Check interval** — 0 min (every request, +200ms) / 30 min (default) / 60 min"
+                    ]
+                  }
+                ],
+                "callouts": [
+                  {
+                    "type": "warning",
+                    "text": "**⚠️ Note:** Per-user quota enforcement requires the monitoring stack to be enabled. Without monitoring, only aggregate limits are possible."
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "platform",
+      "label": "Claude Platform on AWS",
+      "icon": "layers",
+      "subtabs": [
+        {
+          "id": "platform-overview",
+          "label": "Overview",
+          "layout": "hero-with-cards",
+          "nav_buttons": [],
+          "content": {
+            "heading": "Claude Platform on AWS",
+            "description": "Deploy the Claude Platform on your AWS infrastructure. Full control over networking, data residency, and scaling — ideal for regulated environments requiring VPC isolation.",
+            "cards": [
+              {
+                "icon": "🖥️",
+                "title": "Infrastructure Setup",
+                "subtitle": "Coming soon"
+              },
+              {
+                "icon": "🌐",
+                "title": "Networking & VPC",
+                "subtitle": "Coming soon"
+              },
+              {
+                "icon": "⚙️",
+                "title": "Configuration",
+                "subtitle": "Coming soon"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_meta": {
+    "layout_options": [
+      "hero-with-cards",
+      "guided-steps",
+      "left-nav",
+      "checklist",
+      "code-focused",
+      "comparison-table",
+      "faq"
+    ],
+    "nav_button_format": "action:target-subtab-id",
+    "content_types": [
+      "text",
+      "list",
+      "code",
+      "table",
+      "callout",
+      "substeps"
+    ],
+    "how_to_guide": {
+      "add_subtab": "Specify: tab_id > new subtab label, position, layout",
+      "change_layout": "Specify: tab_id > subtab_id > new layout name",
+      "update_content": "Specify: tab_id > subtab_id > what to change",
+      "add_nav_button": "Specify: tab_id > subtab_id > button label + target"
+    }
+  }
+}
