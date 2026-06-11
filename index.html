@@ -1,0 +1,2346 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+:root {
+  --color-bg: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-hover: #f9fafb;
+  --color-surface-active: #f3f4f6;
+  --color-text: #111827;
+  --color-text-secondary: #4b5563;
+  --color-text-muted: #6b7280;
+  --color-border: #e5e7eb;
+  --color-border-light: #f3f4f6;
+  --color-primary: #6366f1;
+  --color-warning: #f59e0b;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { 
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif); 
+  background: var(--color-bg, #ffffff); 
+  color: var(--color-text, #1a1a2e);
+  min-height: 100vh;
+}
+
+/* Dark Mode */
+body.dark {
+  --color-bg: #0f172a;
+  --color-surface: #1e293b;
+  --color-surface-hover: #334155;
+  --color-text: #f1f5f9;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+  --color-border: #334155;
+  --color-border-light: #1e293b;
+  --color-primary: #818cf8;
+  --color-warning: #f59e0b;
+}
+body.dark .info-callout {
+  background: #1e293b;
+  border-color: #334155;
+  color: #93c5fd;
+}
+body.dark .option-card {
+  background: #1e293b;
+  border-color: #334155;
+}
+body.dark .placeholder-card,
+body.dark .placeholder-box {
+  background: #1e293b;
+  border-color: #334155;
+}
+body.dark a { color: var(--color-primary); }
+
+
+/* Header */
+.header {
+  background: var(--color-surface, #ffffff);
+  border-bottom: 1px solid var(--color-border-light, #e2e8f0);
+  padding: 20px 24px 0;
+}
+.header h1 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-text, #1a1a2e);
+  margin-bottom: 6px;
+}
+.header > p {
+  font-size: 13px;
+  color: var(--color-text-muted, #64748b);
+  margin-bottom: 16px;
+}
+
+/* Main Tabs */
+.main-tabs {
+  display: flex;
+  gap: 0;
+}
+.main-tab {
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-secondary, #475569);
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  background: transparent;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.main-tab:hover {
+  background: var(--color-surface-hover, #f1f5f9);
+  color: var(--color-text, #1a1a2e);
+}
+.main-tab.active {
+  background: var(--color-bg, #ffffff);
+  color: var(--color-primary, #6366f1);
+  border-color: var(--color-border-light, #e2e8f0);
+  border-bottom-color: var(--color-bg, #ffffff);
+  margin-bottom: -1px;
+  font-weight: 600;
+}
+
+/* Sub Tabs */
+.subtab-bar {
+  display: flex;
+  gap: 4px;
+  padding: 12px 24px;
+  background: var(--color-bg, #ffffff);
+  border-bottom: 1px solid var(--color-border-light, #e2e8f0);
+}
+.subtab {
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-muted, #64748b);
+  cursor: pointer;
+  border-radius: 6px;
+  background: transparent;
+  border: none;
+  transition: all 0.15s ease;
+}
+.subtab:hover {
+  background: var(--color-surface-hover, #f1f5f9);
+  color: var(--color-text, #1a1a2e);
+}
+.subtab.active {
+  background: var(--color-primary, #6366f1);
+  color: #ffffff;
+}
+
+/* Content Area */
+.content-area {
+  padding: 24px;
+  max-width: none;
+  margin: 0;
+}
+
+/* Option Cards */
+.option-card {
+  background: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border-light, #e2e8f0);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 16px;
+  transition: border-color 0.15s ease;
+}
+.option-card:hover {
+  border-color: var(--color-primary, #6366f1);
+}
+.option-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text, #1a1a2e);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.option-card h3 .card-number {
+  background: var(--color-primary, #6366f1);
+  color: #fff;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.option-card ul {
+  list-style: none;
+  padding: 0;
+}
+.option-card li {
+  font-size: 13px;
+  color: var(--color-text-secondary, #475569);
+  padding: 6px 0;
+  padding-left: 20px;
+  position: relative;
+  line-height: 1.5;
+}
+.option-card li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--color-primary, #6366f1);
+  font-weight: 600;
+}
+
+/* Section heading */
+.section-heading {
+  margin-bottom: 24px;
+}
+.section-heading h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-text, #1a1a2e);
+  margin-bottom: 8px;
+}
+.section-heading p {
+  font-size: 14px;
+  color: var(--color-text-secondary, #475569);
+  line-height: 1.5;
+}
+
+/* Nav Buttons */
+.nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-border-light, #e2e8f0);
+}
+.nav-btn {
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid var(--color-border, #cbd5e1);
+  background: var(--color-surface, #ffffff);
+  color: var(--color-text-secondary, #475569);
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.nav-btn:hover {
+  background: var(--color-primary, #6366f1);
+  color: #ffffff;
+  border-color: var(--color-primary, #6366f1);
+}
+.nav-btn.hidden { visibility: hidden; }
+
+/* Placeholder */
+.placeholder-box {
+  background: var(--color-surface, #ffffff);
+  border: 2px dashed var(--color-border, #cbd5e1);
+  border-radius: 12px;
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--color-text-muted, #64748b);
+}
+.placeholder-box h3 { font-size: 16px; margin-bottom: 8px; color: var(--color-text-secondary, #475569); }
+.placeholder-box p { font-size: 13px; }
+
+/* Hero layout */
+.hero { text-align: center; padding: 40px 0 32px; }
+.hero h2 { font-size: 24px; font-weight: 700; color: var(--color-text, #1a1a2e); margin-bottom: 12px; }
+.hero p { font-size: 15px; color: var(--color-text-secondary, #475569); max-width: 600px; margin: 0 auto; line-height: 1.6; }
+
+.placeholder-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+.placeholder-card {
+  background: var(--color-surface, #ffffff);
+  border: 1px dashed var(--color-border, #cbd5e1);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  color: var(--color-text-muted, #64748b);
+  font-size: 13px;
+}
+
+/* Status badge */
+.status-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 4px;
+  background: var(--color-warning, #f59e0b);
+  color: #ffffff;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+/* Info callout */
+.info-callout {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: #1e40af;
+  margin-top: 16px;
+  line-height: 1.5;
+}
+
+/* Guided Checklist Layout */
+.guided-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 32px;
+  min-height: 400px;
+}
+.step-sidebar {
+  border-right: 1px solid var(--color-border-light, #e2e8f0);
+  padding-right: 20px;
+}
+.step-sidebar-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  margin-bottom: 4px;
+}
+.step-sidebar-item:hover {
+  background: var(--color-surface-hover, #f1f5f9);
+}
+.step-sidebar-item.active {
+  background: var(--color-surface, #f5f3ff);
+  border: 1px solid var(--color-primary, #6366f1);
+}
+.step-sidebar-item.completed .step-number {
+  background: #10b981;
+}
+.step-number {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--color-border, #cbd5e1);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.step-sidebar-item.active .step-number {
+  background: var(--color-primary, #6366f1);
+}
+.step-sidebar-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-secondary, #475569);
+  line-height: 1.4;
+}
+.step-sidebar-item.active .step-sidebar-label {
+  color: var(--color-primary, #6366f1);
+  font-weight: 600;
+}
+.step-content {
+  padding: 4px 0;
+}
+.step-content h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text, #1a1a2e);
+  margin-bottom: 12px;
+}
+.step-content p {
+  font-size: 14px;
+  color: var(--color-text-secondary, #475569);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+.step-content .step-detail-list {
+  list-style: none;
+  padding: 0;
+}
+.step-content .step-detail-list li {
+  font-size: 13px;
+  color: var(--color-text-secondary, #475569);
+  padding: 8px 0 8px 24px;
+  position: relative;
+  line-height: 1.5;
+  border-bottom: 1px solid var(--color-border-light, #f1f5f9);
+}
+.step-content .step-detail-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 14px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-primary, #6366f1);
+  opacity: 0.5;
+}
+.step-nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border-light, #e2e8f0);
+}
+
+/* Bedrock section content styling (shared by Manual Config + CCWB) */
+.bedrock-section h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-text, #1a1a2e);
+  margin-bottom: 8px;
+}
+.bedrock-section > p {
+  font-size: 14px;
+  color: var(--color-text-secondary, #475569);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+.bedrock-section h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text, #1a1a2e);
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+.bedrock-section .step-detail-list {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 16px;
+}
+.bedrock-section .step-detail-list li {
+  font-size: 13px;
+  color: var(--color-text-secondary, #475569);
+  padding: 8px 0 8px 24px;
+  position: relative;
+  line-height: 1.5;
+  border-bottom: 1px solid var(--color-border-light, #f1f5f9);
+}
+.bedrock-section .step-detail-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 14px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-primary, #6366f1);
+  opacity: 0.5;
+}
+.bedrock-section .step-detail-list li strong {
+  color: var(--color-text, #1a1a2e);
+  font-weight: 600;
+}
+.bedrock-section .code-block-wrapper {
+  position: relative;
+  margin: 12px 0 16px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--color-border-light, #e2e8f0);
+}
+.bedrock-section .code-block-wrapper pre {
+  background: #1e293b;
+  color: #e2e8f0;
+  padding: 16px 20px;
+  font-size: 12px;
+  line-height: 1.6;
+  overflow-x: auto;
+  margin: 0;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+.bedrock-section .code-block-wrapper pre code,
+.code-block-wrapper pre code {
+  color: inherit;
+}
+.bedrock-section .code-block-wrapper .copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #94a3b8;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.bedrock-section .code-block-wrapper .copy-btn:hover {
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+}
+
+/* Bedrock Left Navigation */
+.bedrock-layout {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 0;
+  min-height: 500px;
+  margin: -24px;
+}
+.bedrock-content {
+  padding: 24px 32px;
+}
+.bedrock-left-nav {
+  border-right: 1px solid var(--color-border-light, #f3f4f6);
+  padding: 24px 0;
+  position: sticky;
+  top: 0;
+  align-self: start;
+  background: var(--color-surface, #ffffff);
+  min-height: calc(100vh - 140px);
+}
+.bedrock-nav-item {
+  display: block;
+  padding: 10px 16px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-secondary, #4b5563);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border-left: 3px solid transparent;
+  text-decoration: none;
+}
+.bedrock-nav-item:hover {
+  background: var(--color-surface-hover, #f9fafb);
+  color: var(--color-text, #111827);
+}
+.bedrock-nav-item.active {
+  color: var(--color-primary, #6366f1);
+  background: #f5f3ff;
+  border-left-color: var(--color-primary, #6366f1);
+  font-weight: 600;
+}
+.bedrock-content-panel {
+  padding: 24px 40px;
+  max-width: 100%;
+}
+
+
+/* Code Block with Copy */
+.code-block-wrapper {
+  position: relative;
+  margin-top: 12px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--color-border-light, #f3f4f6);
+}
+.code-block-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 12px;
+  background: #1e293b;
+  font-size: 11px;
+  color: #94a3b8;
+}
+.code-block-header .lang-label {
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.copy-btn {
+  background: transparent;
+  border: 1px solid #475569;
+  color: #94a3b8;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.copy-btn:hover {
+  background: #334155;
+  color: #e2e8f0;
+}
+.copy-btn.copied {
+  color: #10b981;
+  border-color: #10b981;
+}
+.code-block-body {
+  background: #0f172a;
+  padding: 16px;
+  overflow-x: auto;
+  max-height: 300px;
+  overflow-y: auto;
+}
+.code-block-body pre {
+  margin: 0;
+  font-family: var(--font-mono, 'SF Mono', 'Fira Code', monospace);
+  font-size: 12px;
+  line-height: 1.5;
+  color: #e2e8f0;
+  white-space: pre;
+}
+.code-collapsible {
+  margin-top: 8px;
+}
+.code-collapsible-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-text-muted, #6b7280);
+  cursor: pointer;
+  border: none;
+  background: none;
+  transition: color 0.15s ease;
+}
+.code-collapsible-toggle:hover {
+  color: var(--color-primary, #6366f1);
+}
+.code-collapsible-toggle .chevron {
+  transition: transform 0.2s ease;
+}
+.code-collapsible.open .code-collapsible-toggle .chevron {
+  transform: rotate(90deg);
+}
+.code-collapsible .code-block-wrapper {
+  display: none;
+}
+.code-collapsible.open .code-block-wrapper {
+  display: block;
+}
+
+/* Collapsible Sub-steps */
+.substep {
+  border: 1px solid var(--color-border-light, #f3f4f6);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+.substep-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  cursor: pointer;
+  background: var(--color-surface, #ffffff);
+  transition: background 0.15s ease;
+  user-select: none;
+}
+.substep-header:hover {
+  background: var(--color-surface-hover, #f9fafb);
+}
+.substep-header .chevron {
+  transition: transform 0.2s ease;
+  font-size: 12px;
+  color: var(--color-text-muted, #6b7280);
+}
+.substep.open .chevron {
+  transform: rotate(90deg);
+}
+.substep-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text, #111827);
+  flex: 1;
+}
+.substep-owner {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: #ede9fe;
+  color: #6d28d9;
+}
+.substep-owner.identity {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+.substep-owner.both {
+  background: #fef3c7;
+  color: #92400e;
+}
+.substep-body {
+  display: none;
+  padding: 0 16px 16px 42px;
+}
+.substep.open .substep-body {
+  display: block;
+}
+.substep-body ul {
+  list-style: none;
+  padding: 0;
+}
+.substep-body li {
+  font-size: 13px;
+  color: var(--color-text-secondary, #4b5563);
+  padding: 4px 0;
+  line-height: 1.5;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <h1>Claude on AWS — Deployment Guide <span class="status-badge">Draft</span></h1>
+    <button id="themeToggle" onclick="toggleTheme()" style="padding: 6px 12px; font-size: 12px; border-radius: 6px; border: 1px solid var(--color-border, #cbd5e1); background: var(--color-surface, #ffffff); color: var(--color-text-secondary, #475569); cursor: pointer; display: flex; align-items: center; gap: 6px;">☀️ Light</button>
+  </div>
+  <p>Interactive guide for deploying Claude across different AWS offerings</p>
+  <div class="main-tabs" id="mainTabs">
+    <div class="main-tab active" data-tab="enterprise">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/></svg>
+      Claude for Enterprise on AWS
+    </div>
+    <div class="main-tab" data-tab="bedrock">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+      Claude on Amazon Bedrock
+    </div>
+    <div class="main-tab" data-tab="platform">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></svg>
+      Claude Platform on AWS
+    </div>
+  </div>
+</div>
+
+<!-- Sub-tab bars -->
+<div class="subtab-bar" id="subtabs-enterprise">
+  <div class="subtab active" data-subtab="enterprise-subscribe">Subscribing to Claude for Enterprise on AWS Marketplace</div>
+  <div class="subtab" data-subtab="enterprise-admin-setup">Setup Claude for Enterprise (with Entra ID)</div>
+  <div class="subtab" data-subtab="enterprise-migration">Migration Scenarios</div>
+</div>
+<div class="subtab-bar" id="subtabs-bedrock" style="display:none">
+  <div class="subtab active" data-subtab="bedrock-manual-config">Manual Config</div>
+  <div class="subtab" data-subtab="bedrock-ccwb">CCWB</div>
+</div>
+<div class="subtab-bar" id="subtabs-platform" style="display:none">
+  <div class="subtab active" data-subtab="platform-overview">Overview</div>
+</div>
+
+<!-- Content Sections -->
+<div class="content-area">
+
+  <!-- Enterprise: Subscribing -->
+  <div class="tab-content" id="content-enterprise-subscribe">
+    <div class="section-heading">
+      <h2>Subscribing to Claude for Enterprise on AWS Marketplace</h2>
+      <p>Choose your subscription path to get started with Claude Enterprise on AWS. All paths lead to the same product — the difference is pricing and procurement process.</p>
+    </div>
+
+    <div class="option-card">
+      <h3><span class="card-number">1</span> Self-Serve via AWS Marketplace</h3>
+      <ul>
+        <li>Minimum <strong>20 seats</strong> required</li>
+        <li>Single seat type: Enterprise seat (includes Claude web, desktop, mobile + Claude Code)</li>
+        <li>Billed annually, per user per month</li>
+        <li>Add seats anytime — prorated for remainder of billing cycle, charged immediately</li>
+        <li>Seat reductions only take effect at annual renewal</li>
+      </ul>
+    </div>
+
+    <div class="option-card">
+      <h3><span class="card-number">2</span> Adding Incremental Seats</h3>
+      <ul>
+        <li>Go to <strong>Organization settings → Billing</strong></li>
+        <li>Click the pencil icon under <strong>Seats</strong></li>
+        <li>Enter the number of additional seats needed</li>
+        <li>Review the prorated charge and confirm</li>
+        <li>Alternatively: a seat is auto-purchased when inviting a new member if none are available</li>
+      </ul>
+    </div>
+
+    <div class="option-card">
+      <h3><span class="card-number">3</span> Private Offer</h3>
+      <ul>
+        <li>Work with your Anthropic account team to request a private offer</li>
+        <li>Private offer appears in <strong>AWS Marketplace → Manage subscriptions</strong></li>
+        <li>Review terms, pricing, and seat count in the offer details</li>
+        <li>Accept the offer in AWS Marketplace to activate your subscription</li>
+      </ul>
+    </div>
+
+    <div class="info-callout">
+      💡 <strong>Note:</strong> Once subscribed through any approach, the Primary Owner receives a setup email from Anthropic to create the workspace. Proceed to the "Setup Claude for Enterprise (with Entra ID)" tab for next steps.
+    </div>
+
+    <div class="nav-buttons">
+      <button class="nav-btn hidden">← Previous</button>
+      <button class="nav-btn" onclick="navigateTo('enterprise-admin-setup')">Setup Claude for Enterprise (with Entra ID) →</button>
+    </div>
+  </div>
+
+  <!-- Enterprise: Admin Setup -->
+  <div class="tab-content" id="content-enterprise-admin-setup" style="display:none">
+    <div class="section-heading">
+      <h2>Setup Claude for Enterprise (with Entra ID)</h2>
+      <p>Follow these steps sequentially to configure your Claude Enterprise workspace.</p>
+    </div>
+
+    <div class="guided-layout">
+      <div class="step-sidebar" id="admin-step-sidebar">
+        <div class="step-sidebar-item active" data-step="admin-step-0" onclick="showAdminStep('admin-step-0')">
+          <span class="step-number">0</span>
+          <span class="step-sidebar-label">Pre-requisites</span>
+        </div>
+        <div class="step-sidebar-item" data-step="admin-step-1" onclick="showAdminStep('admin-step-1')">
+          <span class="step-number">1</span>
+          <span class="step-sidebar-label">Primary Owner Setup</span>
+        </div>
+        <div class="step-sidebar-item" data-step="admin-step-2" onclick="showAdminStep('admin-step-2')">
+          <span class="step-number">2</span>
+          <span class="step-sidebar-label">Configure SSO</span>
+        </div>
+        <div class="step-sidebar-item" data-step="admin-step-3" onclick="showAdminStep('admin-step-3')">
+          <span class="step-number">3</span>
+          <span class="step-sidebar-label">Invite Users</span>
+        </div>
+      </div>
+
+      <div class="step-content-area">
+        <!-- Step 0: Pre-requisites -->
+        <div class="step-content" id="admin-step-0">
+          <h3>Pre-requisites</h3>
+          <p>This guide assumes <strong>Microsoft Entra ID</strong> as your identity provider (IdP). Ensure the following teams and decisions are in place before proceeding.</p>
+          <ul class="step-detail-list">
+            <li><strong>Infra / Cloud team</strong> — will own the AWS Marketplace subscription and serve as the Primary Owner of the Claude workspace</li>
+            <li><strong>Identity team</strong> — manages Microsoft Entra ID; will configure SSO (SAML 2.0) and optionally SCIM provisioning</li>
+          </ul>
+          <div class="info-callout" style="margin-top: 16px;">
+            ⚠️ <strong>Identify your Primary Owner:</strong> There can be only one Primary Owner per workspace. This person is the super-user with full billing and admin control. You can have multiple Admins, but only one Primary Owner. Choose carefully — this should be someone from your Infra/Cloud team.
+          </div>
+
+          <h4 style="font-size: 14px; font-weight: 600; color: var(--color-text, #1a1a2e); margin-top: 24px; margin-bottom: 12px;">🔐 Identity Team Preparedness</h4>
+          <p style="font-size: 13px; color: var(--color-text-secondary, #475569); margin-bottom: 12px;">Brief your Identity team on what they'll need to do. They can start prepping in parallel while the Infra team handles subscription + Primary Owner setup:</p>
+          <ul class="step-detail-list">
+            <li><strong>Domain verification</strong> — add a DNS TXT record for your company domain (required before SSO can be enabled)</li>
+            <li><strong>Enterprise Application</strong> — create a new Enterprise App in Entra ID for Claude (SAML 2.0)</li>
+            <li><strong>SCIM provisioning (optional)</strong> — requires Entra ID P1 or P2 license; enables automatic user sync</li>
+            <li><strong>User/Group assignment</strong> — identify which Entra groups or users will be assigned access to Claude</li>
+          </ul>
+
+          
+          <div class="step-nav-buttons">
+            <button class="nav-btn hidden">← Previous</button>
+            <button class="nav-btn" onclick="showAdminStep('admin-step-1')">Next: Primary Owner Setup →</button>
+          </div>
+        </div>
+
+        <!-- Step 1 -->
+        <div class="step-content" id="admin-step-1" style="display:none">
+          <h3>Step 1: Primary Owner Setup</h3>
+          <p>The admin contact from the deal receives a setup email from Anthropic to create the workspace.</p>
+          <ul class="step-detail-list">
+            <li>Go to <strong><a href="https://claude.ai/login" target="_blank" style="color: var(--color-primary, #6366f1);">https://claude.ai/login</a></strong></li>
+            <li>Create your <strong>workspace name</strong> — this is your org's Claude environment</li>
+            <li>The Primary Owner account uses magic-link (passwordless email) login until SSO is configured</li>
+          </ul>
+          <div class="step-nav-buttons">
+            <button class="nav-btn" onclick="showAdminStep('admin-step-0')">← Pre-requisites</button>
+            <button class="nav-btn" onclick="showAdminStep('admin-step-2')">Next: Configure SSO →</button>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step-content" id="admin-step-2" style="display:none">
+          <h3>Step 2: Configure SSO (Single Sign-On)</h3>
+          <p>Set up SAML 2.0 with Microsoft Entra ID. Expand each sub-step below — note the <strong>owner</strong> badge indicating who performs each action.</p>
+
+          <div class="substep open" onclick="this.classList.toggle('open')">
+            <div class="substep-header">
+              <span class="chevron">▶</span>
+              <span class="substep-title">2a. Verify your domain in Claude</span>
+              <span class="substep-owner">Primary Owner</span>
+            </div>
+            <div class="substep-body">
+              <ul>
+                <li>Go to <a href="https://claude.ai/admin-settings/identity" target="_blank" style="color: var(--color-primary, #6366f1);">Claude Admin → Identity and access</a></li>
+                <li>Add your company domain and follow the verification steps</li>
+                <li>Requires adding a DNS TXT record (coordinate with your DNS admin)</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="substep" onclick="this.classList.toggle('open')">
+            <div class="substep-header">
+              <span class="chevron">▶</span>
+              <span class="substep-title">2b. Start SSO setup flow in Claude</span>
+              <span class="substep-owner">Primary Owner</span>
+            </div>
+            <div class="substep-body">
+              <ul>
+                <li>In Identity and access settings, start the SSO configuration</li>
+                <li>Note the <strong style="background: #fef08a; padding: 1px 4px; border-radius: 3px;">Entity ID</strong> and <strong style="background: #fef08a; padding: 1px 4px; border-radius: 3px;">Reply URL (ACS URL)</strong> — share these with your Identity team</li>
+                <li>Keep this flow open while the Identity team configures Entra</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="substep" onclick="this.classList.toggle('open')">
+            <div class="substep-header">
+              <span class="chevron">▶</span>
+              <span class="substep-title">2c. Create Enterprise Application in Entra</span>
+              <span class="substep-owner identity">Identity Team</span>
+            </div>
+            <div class="substep-body">
+              <ul>
+                <li>In Entra Admin Center → Enterprise applications → New application</li>
+                <li>Search for "Claude" in gallery, or create your own app named "Claude"</li>
+                <li>Select "Integrate any other application you don’t find in the gallery"</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="substep" onclick="this.classList.toggle('open')">
+            <div class="substep-header">
+              <span class="chevron">▶</span>
+              <span class="substep-title">2d. Configure SAML settings</span>
+              <span class="substep-owner identity">Identity Team</span>
+            </div>
+            <div class="substep-body">
+              <ul>
+                <li>Go to Single sign-on → SAML</li>
+                <li>In Basic SAML Configuration, enter the Entity ID and Reply URL from step 2b</li>
+                <li>Set Sign-on URL: <code>https://claude.ai/login</code></li>
+                <li>In Attributes & Claims, set email claim to <code>user.mail</code></li>
+                <li>Download the <strong>Federation Metadata XML</strong></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="substep" onclick="this.classList.toggle('open')">
+            <div class="substep-header">
+              <span class="chevron">▶</span>
+              <span class="substep-title">2e. Upload metadata & complete in Claude</span>
+              <span class="substep-owner both">Both Teams</span>
+            </div>
+            <div class="substep-body">
+              <ul>
+                <li>Identity team shares the Federation Metadata XML with Primary Owner</li>
+                <li>Primary Owner uploads it in the Claude SSO setup flow</li>
+                <li>Complete the connection wizard in Claude</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="substep" onclick="this.classList.toggle('open')">
+            <div class="substep-header">
+              <span class="chevron">▶</span>
+              <span class="substep-title">2f. Configure SCIM provisioning (optional)</span>
+              <span class="substep-owner identity">Identity Team</span>
+            </div>
+            <div class="substep-body">
+              <ul>
+                <li>Requires Entra ID P1 or P2 license</li>
+                <li>In the app → Provisioning → Set mode to Automatic</li>
+                <li>Enter Tenant URL and Secret Token from Claude setup flow</li>
+                <li>Ensure SCIM email attribute matches SSO email claim (<code>user.mail</code>)</li>
+                <li>Set Provisioning Status to On</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="substep" onclick="this.classList.toggle('open')">
+            <div class="substep-header">
+              <span class="chevron">▶</span>
+              <span class="substep-title">2g. Assign users/groups & verify</span>
+              <span class="substep-owner identity">Identity Team</span>
+            </div>
+            <div class="substep-body">
+              <ul>
+                <li>In Users and groups, assign people or groups who should access Claude</li>
+                <li>Trigger a provisioning cycle (if SCIM enabled) and confirm users appear in Claude</li>
+                <li>Have a test user complete SSO login → verify they land in the correct workspace</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="info-callout" style="margin-top: 16px;">
+            📖 Detailed guide: <a href="https://support.claude.com/en/articles/13917889-microsoft-entra-id-sso-setup" target="_blank" style="color: #1e40af;">Microsoft Entra ID SSO Setup</a>
+          </div>
+          <div class="step-nav-buttons">
+            <button class="nav-btn" onclick="showAdminStep('admin-step-1')">← Primary Owner Setup</button>
+            <button class="nav-btn" onclick="showAdminStep('admin-step-3')">Next: Invite Users →</button>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step-content" id="admin-step-3" style="display:none">
+          <h3>Step 3: Invite Users</h3>
+          <p>How users get access depends on whether SSO is configured yet.</p>
+          <ul class="step-detail-list">
+            <li><strong>Pre-SSO:</strong> Manually invite early users via the Admin Console (they'll use magic-link login)</li>
+            <li><strong>Post-SSO:</strong> End users go to <a href="https://claude.ai/login" target="_blank" style="color: var(--color-primary, #6366f1);">claude.ai/login</a> → enter company email → get redirected through your corporate IdP automatically</li>
+            <li><strong>With SCIM:</strong> Users are auto-provisioned when assigned in your IdP — no manual invites needed</li>
+            <li><strong>With JIT (Just-in-Time):</strong> Users are created on first SSO login if they match the verified domain</li>
+          </ul>
+          <div class="info-callout">
+            ✅ <strong>Done!</strong> Your Claude Enterprise workspace is now configured. Users on your domain can access Claude at <code>claude.ai/login</code> using company credentials.
+          </div>
+          <div class="step-nav-buttons">
+            <button class="nav-btn" onclick="showAdminStep('admin-step-2')">← Configure SSO</button>
+            <button class="nav-btn" onclick="navigateTo('enterprise-migration')">Migration Scenarios →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="nav-btn" onclick="navigateTo('enterprise-subscribe')">← Subscribing</button>
+      <button class="nav-btn" onclick="navigateTo('enterprise-migration')">Migration Scenarios →</button>
+    </div>
+  </div>
+
+  <!-- Enterprise: Migration Scenarios -->
+  <div class="tab-content" id="content-enterprise-migration" style="display:none">
+    <div class="section-heading">
+      <h2>Migration Scenarios</h2>
+      <p>Common paths for migrating existing Claude usage to Claude for Enterprise on AWS.</p>
+    </div>
+
+    <div class="option-card">
+      <h3><span class="card-number">1</span> Self-owned Enterprise → Enterprise on AWS Marketplace</h3>
+      <ul>
+        <li>Work with Anthropic to <strong>reuse the same workspace UUID</strong></li>
+        <li>Users and data are retained as-is — no re-provisioning needed</li>
+        <li>Billing moves to AWS Marketplace; workspace stays intact</li>
+        <li>Contact your Anthropic account team to initiate the transfer</li>
+      </ul>
+    </div>
+
+    <div class="option-card">
+      <h3><span class="card-number">2</span> Domain Claim (Personal & Team Subscriptions)</h3>
+      <ul>
+        <li>Works for pre-existing <strong>personal</strong> and <strong>team plan</strong> users on your company email domain</li>
+        <li>Admin initiates domain claim — existing users are notified and absorbed into Enterprise workspace</li>
+        <li>All user data (conversations, projects) migrates automatically</li>
+        <li>Users see a notification and can accept the move or export their data</li>
+      </ul>
+      <div class="info-callout">
+        📖 Reference: <a href="https://support.claude.com/en/articles/14625626-respond-to-an-enterprise-domain-claim-on-your-claude-account" target="_blank" style="color: #1e40af;">Respond to an Enterprise domain claim</a>
+      </div>
+    </div>
+
+    <div class="option-card">
+      <h3><span class="card-number">3</span> Enterprise-to-Enterprise Migration (Manual)</h3>
+      <ul>
+        <li>There is <strong>no built-in tool</strong> to migrate between one Enterprise org and another</li>
+        <li>Use the Project Migration Tool to move projects one-by-one</li>
+        <li>Interactive migration tool will be embedded below when ready</li>
+      </ul>
+      <div style="background: var(--color-surface, #ffffff); border: 2px dashed var(--color-border, #cbd5e1); border-radius: 8px; padding: 20px; text-align: center; margin-top: 12px; color: var(--color-text-muted, #64748b); font-size: 13px;">
+        🔧 <em>Project Migration Tool — will be embedded here</em>
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="nav-btn" onclick="navigateTo('enterprise-admin-setup')">← Setup Claude for Enterprise (with Entra ID)</button>
+      <button class="nav-btn hidden">Next →</button>
+    </div>
+  </div>
+
+  <!-- Bedrock: Full Section -->
+  <div class="tab-content" id="content-bedrock-manual-config" style="display:none">
+    <div class="bedrock-layout">
+      <div class="bedrock-left-nav" id="bedrock-left-nav">
+        <div class="bedrock-nav-item active" data-bsec="overview" onclick="showBedrockSection('overview')">Overview</div>
+        <div class="bedrock-nav-item" data-bsec="prerequisites" onclick="showBedrockSection('prerequisites')">Prerequisites & Setup</div>
+        <div class="bedrock-nav-item" data-bsec="claude-code" onclick="showBedrockSection('claude-code')">Claude Code Deployment</div>
+        <div class="bedrock-nav-item" data-bsec="cowork" onclick="showBedrockSection('cowork')">Claude Cowork Deployment</div>
+        <div class="bedrock-nav-item" data-bsec="sops" onclick="showBedrockSection('sops')">SOPs</div>
+        <div class="bedrock-nav-item" data-bsec="monitoring" onclick="showBedrockSection('monitoring')">Monitoring & Cost</div>
+        <div class="bedrock-nav-item" data-bsec="security" onclick="showBedrockSection('security')">Security & Compliance</div>
+      </div>
+      <div class="bedrock-content-panel">
+<!-- Bedrock: Overview -->
+  <div class="bedrock-section" id="bsec-overview">
+    <div class="section-heading">
+      <h2>Claude Code & Claude Cowork via Amazon Bedrock</h2>
+      <p>Deploy Claude Code (CLI/IDE AI coding assistant) and Claude Cowork (desktop AI companion) through Amazon Bedrock. All data stays within your AWS boundary — Anthropic never sees prompts or completions.</p>
+    </div>
+
+    <div class="option-card">
+      <h3><span class="card-number">💻</span> Claude Code</h3>
+      <ul>
+        <li>AI coding assistant (CLI/IDE-integrated) — code generation, review, debugging, refactoring</li>
+        <li>Uses AWS SDK credential chain to authenticate to Bedrock</li>
+        <li>For development teams</li>
+      </ul>
+    </div>
+
+    <div class="option-card">
+      <h3><span class="card-number">🖥️</span> Claude Cowork</h3>
+      <ul>
+        <li>AI desktop companion app — delegates long-running tasks, works with local files, MCP connectors</li>
+        <li>In-app AWS Sign-in via IAM Identity Center (no CLI needed on end-user machines)</li>
+        <li>For all teams — document analysis, research, workflow automation</li>
+      </ul>
+    </div>
+
+    <h4 style="font-size: 14px; font-weight: 600; margin-top: 24px; margin-bottom: 12px;">Architecture Principles</h4>
+    <ul class="step-detail-list">
+      <li>Per-team dedicated AWS accounts for cost isolation and independent governance</li>
+      <li>Centralized identity via IAM Identity Center federated with Microsoft Entra ID</li>
+      <li>Data stays within AWS boundary — Anthropic never sees prompts or completions</li>
+      <li>Team-specific model access and configuration profiles</li>
+      <li>CloudTrail audit logging with per-user attribution</li>
+    </ul>
+
+    <div class="nav-buttons">
+      <button class="nav-btn hidden">← Previous</button>
+      <button class="nav-btn" onclick="showBedrockSection('prerequisites')">Prerequisites & Setup →</button>
+    </div>
+  </div>
+
+  <!-- Bedrock: Prerequisites -->
+  <div class="bedrock-section" id="bsec-prerequisites" style="display:none">
+    <div class="section-heading">
+      <h2>Prerequisites & Account Setup</h2>
+      <p>Foundational setup required before rolling out Claude to any team.</p>
+    </div>
+
+    <div class="guided-layout">
+      <div class="step-sidebar" id="bedrock-prereq-sidebar">
+        <div class="step-sidebar-item active" data-step="bp-step-1" onclick="showBPStep('bp-step-1')">
+          <span class="step-number">1</span>
+          <span class="step-sidebar-label">AWS Organizations</span>
+        </div>
+        <div class="step-sidebar-item" data-step="bp-step-2" onclick="showBPStep('bp-step-2')">
+          <span class="step-number">2</span>
+          <span class="step-sidebar-label">IAM Identity Center</span>
+        </div>
+        <div class="step-sidebar-item" data-step="bp-step-3" onclick="showBPStep('bp-step-3')">
+          <span class="step-number">3</span>
+          <span class="step-sidebar-label">Service Control Policies</span>
+        </div>
+        <div class="step-sidebar-item" data-step="bp-step-4" onclick="showBPStep('bp-step-4')">
+          <span class="step-number">4</span>
+          <span class="step-sidebar-label">Quotas & Limits</span>
+        </div>
+        <div class="step-sidebar-item" data-step="bp-step-5" onclick="showBPStep('bp-step-5')">
+          <span class="step-number">5</span>
+          <span class="step-sidebar-label">Shared vs Dedicated Account</span>
+        </div>
+        <div class="step-sidebar-item" data-step="bp-step-6" onclick="showBPStep('bp-step-6')">
+          <span class="step-number">6</span>
+          <span class="step-sidebar-label">Use Case Submission</span>
+        </div>
+        <div class="step-sidebar-item" data-step="bp-step-7" onclick="showBPStep('bp-step-7')">
+          <span class="step-number">7</span>
+          <span class="step-sidebar-label">Onboarding Checklist</span>
+        </div>
+      </div>
+
+      <div class="step-content-area">
+        <div class="step-content" id="bp-step-1">
+          <h3>AWS Organizations Setup</h3>
+          <ul class="step-detail-list">
+            <li>AWS Organizations must be configured with a well-defined OU structure</li>
+            <li><strong>Option A:</strong> Create a dedicated OU for Claude workload accounts (e.g., <code>OU: AI-Assistants</code>) — simplifies SCP inheritance</li>
+            <li><strong>Option B:</strong> Place Claude accounts within existing team/BU OUs — aligns with current org structure but requires per-account SCP attachment</li>
+            <li>Each team gets a dedicated AWS account</li>
+            <li>Management account retains central governance and SCP attachment</li>
+          </ul>
+          <div class="step-nav-buttons">
+            <button class="nav-btn hidden">← Previous</button>
+            <button class="nav-btn" onclick="showBPStep('bp-step-2')">Next: IAM Identity Center →</button>
+          </div>
+        </div>
+
+        <div class="step-content" id="bp-step-2" style="display:none">
+          <h3>IAM Identity Center Configuration</h3>
+          <ul class="step-detail-list">
+            <li><strong>Enable IAM Identity Center</strong> in the management account (or delegated admin)</li>
+            <li><strong>Configure Microsoft Entra ID</strong> as external identity source — SAML 2.0 federation + SCIM provisioning</li>
+            <li><strong>Create Entra ID Security Groups</strong> per team (e.g., <code>SG-Claude-TeamAlpha</code>) for SCIM sync</li>
+            <li><strong>Set session duration</strong> to 8-12 hours for permission sets (controls re-auth frequency)</li>
+          </ul>
+          <div class="step-nav-buttons">
+            <button class="nav-btn" onclick="showBPStep('bp-step-1')">← AWS Organizations</button>
+            <button class="nav-btn" onclick="showBPStep('bp-step-3')">Next: SCPs →</button>
+          </div>
+        </div>
+
+        <div class="step-content" id="bp-step-3" style="display:none">
+          <h3>Service Control Policies (SCPs)</h3>
+          <p>Apply these SCPs to the Claude OU to enforce guardrails across all team accounts:</p>
+          <div class="substep open" onclick="this.classList.toggle('open')">
+            <div class="substep-header">
+              <span class="chevron">▶</span>
+              <span class="substep-title">Restrict Bedrock to Approved Models Only</span>
+            </div>
+            <div class="substep-body">
+              <ul>
+                <li>Deny <code>bedrock:InvokeModel</code> unless InferenceProfileArn matches <code>us.anthropic.claude-*</code></li>
+                <li>Prevents teams from invoking non-Claude or unapproved models</li>
+              </ul>
+              <div class="code-collapsible" onclick="toggleCode(this); event.stopPropagation();">
+                <button class="code-collapsible-toggle"><span class="chevron">▶</span> View JSON Policy</button>
+                <div class="code-block-wrapper" onclick="event.stopPropagation()">
+                  <div class="code-block-header"><span class="lang-label">JSON</span><button class="copy-btn" onclick="copyCode(this); event.stopPropagation();">⧉ Copy</button></div>
+                  <div class="code-block-body"><pre>{
+  "Version": "2012-10-17",
+  "Statement": [{
+    "Sid": "DenyNonClaudeModels",
+    "Effect": "Deny",
+    "Action": ["bedrock:InvokeModel", "bedrock:InvokeModelWithResponseStream"],
+    "Resource": "*",
+    "Condition": {
+      "StringNotLike": {
+        "bedrock:InferenceProfileArn": [
+          "arn:aws:bedrock:*:*:inference-profile/us.anthropic.claude-*",
+          "arn:aws:bedrock:*:*:application-inference-profile/*"
+        ]
+      }
+    }
+  }]
+}</pre></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="substep" onclick="this.classList.toggle('open')">
+            <div class="substep-header">
+              <span class="chevron">▶</span>
+              <span class="substep-title">Deny Model Access Changes</span>
+            </div>
+            <div class="substep-body">
+              <ul>
+                <li>Deny <code>bedrock:PutUseCaseForModelAccess</code> except for <code>CentralAdminRole</code></li>
+                <li>Prevents teams from enabling additional models without central approval</li>
+              </ul>
+              <div class="code-collapsible" onclick="toggleCode(this); event.stopPropagation();">
+                <button class="code-collapsible-toggle"><span class="chevron">▶</span> View JSON Policy</button>
+                <div class="code-block-wrapper" onclick="event.stopPropagation()">
+                  <div class="code-block-header"><span class="lang-label">JSON</span><button class="copy-btn" onclick="copyCode(this); event.stopPropagation();">⧉ Copy</button></div>
+                  <div class="code-block-body"><pre>{
+  "Version": "2012-10-17",
+  "Statement": [{
+    "Sid": "DenyModelAccessChanges",
+    "Effect": "Deny",
+    "Action": ["bedrock:PutUseCaseForModelAccess"],
+    "Resource": "*",
+    "Condition": {
+      "StringNotLike": {
+        "aws:PrincipalArn": "arn:aws:iam::*:role/CentralAdminRole"
+      }
+    }
+  }]
+}</pre></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="substep" onclick="this.classList.toggle('open')">
+            <div class="substep-header">
+              <span class="chevron">▶</span>
+              <span class="substep-title">Enforce Region Restriction</span>
+            </div>
+            <div class="substep-body">
+              <ul>
+                <li>Deny <code>bedrock:*</code> unless <code>aws:RequestedRegion</code> is in approved list (e.g., us-east-1, us-west-2)</li>
+                <li>Adjust regions based on data residency and latency requirements</li>
+              </ul>
+              <div class="code-collapsible" onclick="toggleCode(this); event.stopPropagation();">
+                <button class="code-collapsible-toggle"><span class="chevron">▶</span> View JSON Policy</button>
+                <div class="code-block-wrapper" onclick="event.stopPropagation()">
+                  <div class="code-block-header"><span class="lang-label">JSON</span><button class="copy-btn" onclick="copyCode(this); event.stopPropagation();">⧉ Copy</button></div>
+                  <div class="code-block-body"><pre>{
+  "Version": "2012-10-17",
+  "Statement": [{
+    "Sid": "DenyNonApprovedRegions",
+    "Effect": "Deny",
+    "Action": ["bedrock:*"],
+    "Resource": "*",
+    "Condition": {
+      "StringNotEquals": {
+        "aws:RequestedRegion": ["us-east-1", "us-west-2"]
+      }
+    }
+  }]
+}</pre></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="step-nav-buttons">
+            <button class="nav-btn" onclick="showBPStep('bp-step-2')">← IAM Identity Center</button>
+            <button class="nav-btn" onclick="showBPStep('bp-step-4')">Next: Quotas →</button>
+          </div>
+        </div>
+
+        <div class="step-content" id="bp-step-4" style="display:none">
+          <h3>Bedrock Service Limits & Quotas</h3>
+          <p>For each new team account, configure:</p>
+          <ul class="step-detail-list">
+            <li>Request appropriate model invocation quotas (TPM) based on team size</li>
+            <li>Set up AWS Budgets with alerts at 80% and 100% thresholds</li>
+            <li>Configure CloudWatch alarms for throttling (<code>InvocationThrottles</code> metric)</li>
+            <li>Enable Bedrock Invocation Logging to S3 for audit trail</li>
+          </ul>
+          <div style="overflow-x: auto; margin-top: 16px;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+              <thead><tr style="border-bottom: 2px solid var(--color-border, #e5e7eb);">
+                <th style="text-align: left; padding: 8px 12px; color: var(--color-text-muted);">Team Size</th>
+                <th style="text-align: left; padding: 8px 12px; color: var(--color-text-muted);">Recommended TPM</th>
+                <th style="text-align: left; padding: 8px 12px; color: var(--color-text-muted);">Monthly Budget Alert</th>
+              </tr></thead>
+              <tbody>
+                <tr style="border-bottom: 1px solid var(--color-border-light, #f3f4f6);"><td style="padding: 8px 12px;">Small (5-15 users)</td><td style="padding: 8px 12px;">100K-500K TPM</td><td style="padding: 8px 12px;">$2,000-$5,000</td></tr>
+                <tr style="border-bottom: 1px solid var(--color-border-light, #f3f4f6);"><td style="padding: 8px 12px;">Medium (15-50 users)</td><td style="padding: 8px 12px;">500K-2M TPM</td><td style="padding: 8px 12px;">$5,000-$20,000</td></tr>
+                <tr><td style="padding: 8px 12px;">Large (50+ users)</td><td style="padding: 8px 12px;">2M+ TPM</td><td style="padding: 8px 12px;">$20,000+</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="step-nav-buttons">
+            <button class="nav-btn" onclick="showBPStep('bp-step-3')">← SCPs</button>
+            <button class="nav-btn" onclick="showBPStep('bp-step-5')">Next: Account Strategy →</button>
+          </div>
+        </div>
+
+        <div class="step-content" id="bp-step-5" style="display:none">
+          <h3>Shared Account vs. Dedicated Account</h3>
+          <p>If a team plans to use an existing AWS account with Bedrock workloads:</p>
+          <div class="info-callout" style="margin-bottom: 16px;">
+            ⚠️ <strong>Key Risks of Sharing:</strong> Quota contention, cost attribution complexity, budget alert noise, broader security blast radius.
+          </div>
+          <ul class="step-detail-list">
+            <li>Review current quota utilization (CloudWatch: InvocationCount, TokenCount, InvocationThrottles)</li>
+            <li>Assess whether remaining headroom can absorb expected Claude traffic</li>
+            <li>If quota headroom insufficient or workloads are mission-critical → <strong>create a separate dedicated account</strong></li>
+            <li>If sharing is acceptable → request quota increases + set up Application Inference Profiles for cost separation</li>
+          </ul>
+          <div class="info-callout" style="margin-top: 16px;">
+            💡 <strong>Best practice:</strong> Provision a dedicated AWS account per team. Eliminates quota contention, simplifies cost tracking, and ensures precise SCP scoping.
+          </div>
+          <div class="step-nav-buttons">
+            <button class="nav-btn" onclick="showBPStep('bp-step-4')">← Quotas</button>
+            <button class="nav-btn" onclick="showBPStep('bp-step-6')">Next: Use Case Submission →</button>
+          </div>
+        </div>
+
+        <div class="step-content" id="bp-step-6" style="display:none">
+          <h3>Anthropic Use Case Submission</h3>
+          <p>One-time per account — required before Claude models can be invoked via Bedrock.</p>
+          <div class="info-callout" style="margin-bottom: 16px;">
+            📋 <strong>Why is this needed?</strong> Anthropic requires every AWS account to submit a brief use-case form before enabling access to Claude models on Bedrock. This is a compliance and responsible-use requirement from Anthropic — it helps them understand how their models are being used and ensures alignment with their Acceptable Use Policy. The form is lightweight (company name, website, intended use case) and access is typically granted immediately upon submission.
+          </div>
+          <div class="substep open" onclick="this.classList.toggle('open')">
+            <div class="substep-header">
+              <span class="chevron">▶</span>
+              <span class="substep-title">Option A: Via AWS Console</span>
+            </div>
+            <div class="substep-body">
+              <ul>
+                <li>Navigate to Bedrock console > Model catalog</li>
+                <li>Select any Anthropic model and complete the use case form</li>
+                <li>Access granted immediately after submission</li>
+              </ul>
+            </div>
+          </div>
+          <div class="substep" onclick="this.classList.toggle('open')">
+            <div class="substep-header">
+              <span class="chevron">▶</span>
+              <span class="substep-title">Option B: Via CLI (recommended for automation)</span>
+            </div>
+            <div class="substep-body">
+              <ul>
+                <li>Create form.json with company details and use case description</li>
+                <li>Run the CLI command below (must target us-east-1)</li>
+                <li>Submitting principal needs <code>bedrock:PutUseCaseForModelAccess</code> IAM permission</li>
+              </ul>
+              <div class="code-collapsible" onclick="toggleCode(this); event.stopPropagation();">
+                <button class="code-collapsible-toggle"><span class="chevron">▶</span> View CLI Command</button>
+                <div class="code-block-wrapper" onclick="event.stopPropagation()">
+                  <div class="code-block-header"><span class="lang-label">BASH</span><button class="copy-btn" onclick="copyCode(this); event.stopPropagation();">⧉ Copy</button></div>
+                  <div class="code-block-body"><pre># Create the form data JSON
+cat <<EOF > form.json
+{
+  "companyName": "YOUR_COMPANY",
+  "companyWebsite": "https://www.example.com",
+  "intendedUsers": "0",
+  "industryOption": "Customer Service",
+  "otherIndustryOption": "",
+  "useCases": "AI-powered productivity tools."
+}
+EOF
+
+# Submit (must be us-east-1, must Base64 encode)
+aws bedrock put-use-case-for-model-access \
+  --form-data $(cat form.json | base64) \
+  --region us-east-1</pre></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="step-nav-buttons">
+            <button class="nav-btn" onclick="showBPStep('bp-step-5')">← Account Strategy</button>
+            <button class="nav-btn" onclick="showBPStep('bp-step-7')">Next: Checklist →</button>
+          </div>
+        </div>
+
+        <div class="step-content" id="bp-step-7" style="display:none">
+          <h3>New Account Onboarding Checklist</h3>
+          <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+              <thead><tr style="border-bottom: 2px solid var(--color-border, #e5e7eb);">
+                <th style="text-align: left; padding: 8px; color: var(--color-text-muted);">#</th>
+                <th style="text-align: left; padding: 8px; color: var(--color-text-muted);">Action</th>
+                <th style="text-align: left; padding: 8px; color: var(--color-text-muted);">Owner</th>
+              </tr></thead>
+              <tbody>
+                <tr style="border-bottom: 1px solid var(--color-border-light);"><td style="padding: 8px;">1</td><td style="padding: 8px;">Create account under Claude OU</td><td style="padding: 8px;"><span class="substep-owner">Cloud Platform</span></td></tr>
+                <tr style="border-bottom: 1px solid var(--color-border-light);"><td style="padding: 8px;">2</td><td style="padding: 8px;">Verify SCPs inherited from Claude OU</td><td style="padding: 8px;"><span class="substep-owner">Cloud Platform</span></td></tr>
+                <tr style="border-bottom: 1px solid var(--color-border-light);"><td style="padding: 8px;">3</td><td style="padding: 8px;">Submit Anthropic use case form</td><td style="padding: 8px;"><span class="substep-owner">Cloud Platform</span></td></tr>
+                <tr style="border-bottom: 1px solid var(--color-border-light);"><td style="padding: 8px;">4</td><td style="padding: 8px;">Create IAM Identity Center permission set</td><td style="padding: 8px;"><span class="substep-owner identity">Identity Team</span></td></tr>
+                <tr style="border-bottom: 1px solid var(--color-border-light);"><td style="padding: 8px;">5</td><td style="padding: 8px;">Assign Entra ID group to permission set + account</td><td style="padding: 8px;"><span class="substep-owner identity">Identity Team</span></td></tr>
+                <tr style="border-bottom: 1px solid var(--color-border-light);"><td style="padding: 8px;">6</td><td style="padding: 8px;">Set up AWS Budgets and cost alerts</td><td style="padding: 8px;"><span class="substep-owner both">FinOps</span></td></tr>
+                <tr style="border-bottom: 1px solid var(--color-border-light);"><td style="padding: 8px;">7</td><td style="padding: 8px;">Enable CloudTrail + Bedrock invocation logging</td><td style="padding: 8px;"><span class="substep-owner both">Security</span></td></tr>
+                <tr style="border-bottom: 1px solid var(--color-border-light);"><td style="padding: 8px;">8</td><td style="padding: 8px;">Request and validate Bedrock quota limits</td><td style="padding: 8px;"><span class="substep-owner">Cloud Platform</span></td></tr>
+                <tr style="border-bottom: 1px solid var(--color-border-light);"><td style="padding: 8px;">9</td><td style="padding: 8px;">Create application inference profiles (optional)</td><td style="padding: 8px;"><span class="substep-owner">Cloud Platform</span></td></tr>
+                <tr><td style="padding: 8px;">10</td><td style="padding: 8px;">Test end-to-end auth flow with pilot user</td><td style="padding: 8px;"><span class="substep-owner both">Team Lead</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="step-nav-buttons">
+            <button class="nav-btn" onclick="showBPStep('bp-step-6')">← Use Case Submission</button>
+            <button class="nav-btn" onclick="showBedrockSection('claude-code')">Claude Code Deployment →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bedrock: Claude Code -->
+  <div class="bedrock-section" id="bsec-claude-code" style="display:none">
+    <div class="section-heading">
+      <h2>Claude Code Deployment</h2>
+      <p>CLI-based AI coding assistant that integrates into terminal and IDE workflows.</p>
+    </div>
+
+    <div class="substep open" onclick="this.classList.toggle('open')">
+      <div class="substep-header">
+        <span class="chevron">▶</span>
+        <span class="substep-title">3.1 IAM Permission Set</span>
+        <span class="substep-owner identity">Identity Team</span>
+      </div>
+      <div class="substep-body">
+        <ul>
+          <li>Create permission set in IAM Identity Center with inline policy</li>
+          <li>Grant <code>bedrock:InvokeModel</code> + <code>InvokeModelWithResponseStream</code></li>
+          <li>Scope to specific model ARNs: Opus 4.7, Sonnet 4.6, Haiku 4.5</li>
+          <li>Set session duration to 8-12 hours</li>
+          <li>Each model is a separate statement — easy to add/remove per team</li>
+        </ul>
+        <div class="code-collapsible" onclick="toggleCode(this); event.stopPropagation();">
+          <button class="code-collapsible-toggle"><span class="chevron">▶</span> View IAM Policy</button>
+          <div class="code-block-wrapper" onclick="event.stopPropagation()">
+            <div class="code-block-header"><span class="lang-label">JSON</span><button class="copy-btn" onclick="copyCode(this); event.stopPropagation();">⧉ Copy</button></div>
+            <div class="code-block-body"><pre>{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowBedrockClaudeSonnet",
+      "Effect": "Allow",
+      "Action": [
+        "bedrock:InvokeModel",
+        "bedrock:InvokeModelWithResponseStream"
+      ],
+      "Resource": [
+        "arn:aws:bedrock:*:*:inference-profile/us.anthropic.claude-sonnet-4-6*"
+      ]
+    },
+    {
+      "Sid": "AllowBedrockClaudeOpus",
+      "Effect": "Allow",
+      "Action": [
+        "bedrock:InvokeModel",
+        "bedrock:InvokeModelWithResponseStream"
+      ],
+      "Resource": [
+        "arn:aws:bedrock:*:*:inference-profile/us.anthropic.claude-opus-4-7*"
+      ]
+    },
+    {
+      "Sid": "AllowBedrockClaudeHaiku",
+      "Effect": "Allow",
+      "Action": [
+        "bedrock:InvokeModel",
+        "bedrock:InvokeModelWithResponseStream"
+      ],
+      "Resource": [
+        "arn:aws:bedrock:*:*:inference-profile/us.anthropic.claude-haiku-4-5*"
+      ]
+    }
+  ]
+}</pre></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="substep" onclick="this.classList.toggle('open')">
+      <div class="substep-header">
+        <span class="chevron">▶</span>
+        <span class="substep-title">3.2 Developer Machine Setup</span>
+        <span class="substep-owner">Developer</span>
+      </div>
+      <div class="substep-body">
+        <ul>
+          <li><strong>Prerequisites:</strong> AWS CLI v2, Claude Code CLI (<code>npm install -g @anthropic-ai/claude-code</code>), network access to Bedrock + Identity Center</li>
+          <li><strong>AWS SSO Profile:</strong> Configure <code>~/.aws/config</code> with SSO session, account ID, role name</li>
+          <li><strong>Environment Variables:</strong> <code>CLAUDE_CODE_USE_BEDROCK=1</code>, <code>AWS_REGION</code>, <code>AWS_PROFILE</code></li>
+          <li><strong>Model Pinning:</strong> Set <code>ANTHROPIC_DEFAULT_SONNET_MODEL</code>, <code>ANTHROPIC_DEFAULT_OPUS_MODEL</code>, etc.</li>
+          <li>Cross-region inference profile IDs (<code>us.</code> prefix) recommended for higher availability</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="substep" onclick="this.classList.toggle('open')">
+      <div class="substep-header">
+        <span class="chevron">▶</span>
+        <span class="substep-title">3.3 Managed Settings</span>
+        <span class="substep-owner">Cloud Platform</span>
+      </div>
+      <div class="substep-body">
+        <ul>
+          <li><strong>macOS:</strong> <code>/Library/Application Support/ClaudeCode/managed-settings.json</code></li>
+          <li><strong>Linux/WSL:</strong> <code>/etc/claude-code/managed-settings.json</code></li>
+          <li><strong>Windows:</strong> <code>C:\Program Files\ClaudeCode\managed-settings.json</code></li>
+          <li>Controls: permissions (allow/deny), MCP server restrictions, sandbox networking, environment variables</li>
+          <li>Set <code>allowManagedPermissionRulesOnly: true</code> and <code>allowManagedMcpServersOnly: true</code></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="substep" onclick="this.classList.toggle('open')">
+      <div class="substep-header">
+        <span class="chevron">▶</span>
+        <span class="substep-title">3.4 Verification</span>
+        <span class="substep-owner">Developer</span>
+      </div>
+      <div class="substep-body">
+        <ul>
+          <li><code>aws sso login --profile claude-code</code></li>
+          <li><code>claude</code> — launches Claude Code</li>
+          <li><code>/status</code> — should show "Amazon Bedrock" as provider and list pinned models</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="substep" onclick="this.classList.toggle('open')">
+      <div class="substep-header">
+        <span class="chevron">▶</span>
+        <span class="substep-title">3.5 VS Code Extension</span>
+        <span class="substep-owner">Developer</span>
+      </div>
+      <div class="substep-body">
+        <ul>
+          <li>Shares same AWS credential chain as Claude Code CLI</li>
+          <li>If CLI works with SSO profile, extension picks it up automatically</li>
+          <li>Run <code>claude configure</code> → select Amazon Bedrock → specify SSO profile</li>
+          <li>Settings stored in <code>~/.claude/settings.json</code> — extension reads same config</li>
+          <li>Restart extension if VS Code was open during SSO login</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="nav-btn" onclick="showBedrockSection('prerequisites')">← Prerequisites</button>
+      <button class="nav-btn" onclick="showBedrockSection('cowork')">Claude Cowork →</button>
+    </div>
+  </div>
+
+  <!-- Bedrock: Cowork -->
+  <div class="bedrock-section" id="bsec-cowork" style="display:none">
+    <div class="section-heading">
+      <h2>Claude Cowork Deployment</h2>
+      <p>Desktop AI companion app — all prompts route through your AWS infrastructure.</p>
+    </div>
+
+    <div class="substep open" onclick="this.classList.toggle('open')">
+      <div class="substep-header">
+        <span class="chevron">▶</span>
+        <span class="substep-title">4.1 Authentication: In-App AWS Sign-In</span>
+        <span class="substep-owner identity">Identity Team</span>
+      </div>
+      <div class="substep-body">
+        <ul>
+          <li>User launches Cowork → "Sign in with AWS" page</li>
+          <li>Opens browser for IAM Identity Center device-authorization flow</li>
+          <li>Authenticates via Entra ID (corporate credentials + MFA)</li>
+          <li>Token stored encrypted in OS secure storage</li>
+          <li>Re-auth when session expires (8-12 hours)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="substep" onclick="this.classList.toggle('open')">
+      <div class="substep-header">
+        <span class="chevron">▶</span>
+        <span class="substep-title">4.2 Manual Configuration (Initial Rollout)</span>
+        <span class="substep-owner">Cloud Platform</span>
+      </div>
+      <div class="substep-body">
+        <ul>
+          <li>Install Claude Desktop from claude.com/download — <strong>Do NOT sign in</strong></li>
+          <li>Enable Developer Mode: Help > Troubleshooting > Enable Developer Mode</li>
+          <li>Open: Developer > Configure third-party inference</li>
+          <li>Set: Inference Provider = Bedrock, Region, SSO Start URL, SSO Region, Account ID, Role Name</li>
+          <li>Configure Model List with Bedrock inference profile IDs</li>
+          <li>Click "Apply Locally" → app relaunches with "Sign in with AWS" option</li>
+          <li>⚠️ Remove <code>inferenceBedrockProfile</code> field to enable in-app AWS sign-in</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="substep" onclick="this.classList.toggle('open')">
+      <div class="substep-header">
+        <span class="chevron">▶</span>
+        <span class="substep-title">4.3 MDM-Based Configuration (Future State)</span>
+        <span class="substep-owner">Cloud Platform</span>
+      </div>
+      <div class="substep-body">
+        <ul>
+          <li>Build config on admin machine → Export .mobileconfig (macOS) or .reg (Windows)</li>
+          <li>Deploy config via MDM (Jamf, Intune, Workspace ONE) BEFORE distributing app</li>
+          <li><strong>macOS:</strong> <code>/Library/Managed Preferences/com.anthropic.claudefordesktop.plist</code></li>
+          <li><strong>Windows:</strong> <code>HKLM\SOFTWARE\Policies\Claude</code></li>
+          <li>Key benefit: in-app configuration window becomes read-only on managed devices</li>
+          <li>For Intune MSIX deployment: Apps > Windows > Line-of-business > Upload .msix</li>
+          <li>For ADMX policy: Import Claude template, create configuration policy per team</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="nav-btn" onclick="showBedrockSection('claude-code')">← Claude Code</button>
+      <button class="nav-btn" onclick="showBedrockSection('sops')">SOPs →</button>
+    </div>
+  </div>
+
+  <!-- Bedrock: SOPs -->
+  <div class="bedrock-section" id="bsec-sops" style="display:none">
+    <div class="section-heading">
+      <h2>Standard Operating Procedures</h2>
+      <p>Repeatable processes for common administrative actions.</p>
+    </div>
+
+    <div class="substep open" onclick="this.classList.toggle('open')">
+      <div class="substep-header">
+        <span class="chevron">▶</span>
+        <span class="substep-title">SOP-1: Onboard New User to Existing Team</span>
+        <span class="substep-owner identity">Identity Team</span>
+      </div>
+      <div class="substep-body">
+        <ul>
+          <li>Add user to Entra ID security group → SCIM auto-syncs within 40 min</li>
+          <li>Deploy Claude tools to user machine (CLI + config or Cowork + managed config)</li>
+          <li>User acceptance test → verify end-to-end flow</li>
+          <li>Send onboarding email with usage guidelines</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="substep" onclick="this.classList.toggle('open')">
+      <div class="substep-header">
+        <span class="chevron">▶</span>
+        <span class="substep-title">SOP-2: Onboard New Team</span>
+        <span class="substep-owner">Cloud Platform + Identity</span>
+      </div>
+      <div class="substep-body">
+        <ul>
+          <li>Create dedicated AWS account under Claude OU</li>
+          <li>Submit Anthropic use case form</li>
+          <li>Create Entra ID group + configure SCIM</li>
+          <li>Create permission set + assign group to account</li>
+          <li>Configure budgets, monitoring, quotas</li>
+          <li>Pilot with 3-5 users → full rollout</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="substep" onclick="this.classList.toggle('open')">
+      <div class="substep-header">
+        <span class="chevron">▶</span>
+        <span class="substep-title">SOP-3: Modify Model Access</span>
+        <span class="substep-owner">Cloud Platform</span>
+      </div>
+      <div class="substep-body">
+        <ul>
+          <li>Evaluate cost impact (Opus ≈ 5x Sonnet per token), quota needs, region availability</li>
+          <li>Update SCP allowed model list if needed</li>
+          <li>Update managed-settings.json and Cowork MDM profiles</li>
+          <li>Adjust budget alerts for new cost profile</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="substep" onclick="this.classList.toggle('open')">
+      <div class="substep-header">
+        <span class="chevron">▶</span>
+        <span class="substep-title">SOP-4: Revoke User Access</span>
+        <span class="substep-owner identity">Identity Team</span>
+      </div>
+      <div class="substep-body">
+        <ul>
+          <li>Remove user from Entra ID security group (SCIM auto-deprovisions)</li>
+          <li>For immediate revocation: delete user session in IAM Identity Center</li>
+          <li>Remove CLI + managed-settings and Cowork app from device</li>
+          <li>Verify via CloudTrail — no post-revocation API calls</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="substep" onclick="this.classList.toggle('open')">
+      <div class="substep-header">
+        <span class="chevron">▶</span>
+        <span class="substep-title">SOP-5: Decommission a Team</span>
+        <span class="substep-owner">Cloud Platform</span>
+      </div>
+      <div class="substep-body">
+        <ul>
+          <li>Remove all users from Entra group</li>
+          <li>Delete permission set assignment</li>
+          <li>Disable Bedrock model access</li>
+          <li>Archive CloudTrail + invocation logs</li>
+          <li>Close/suspend AWS account (retain for audit period)</li>
+          <li>Remove MDM profiles + delete Entra group</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="nav-btn" onclick="showBedrockSection('cowork')">← Cowork</button>
+      <button class="nav-btn" onclick="showBedrockSection('monitoring')">Monitoring & Cost →</button>
+    </div>
+  </div>
+
+  <!-- Bedrock: Monitoring -->
+  <div class="bedrock-section" id="bsec-monitoring" style="display:none">
+    <div class="section-heading">
+      <h2>Monitoring & Cost Management</h2>
+      <p>Track usage, attribute costs, and enforce quotas.</p>
+    </div>
+
+    <div class="substep open" onclick="this.classList.toggle('open')">
+      <div class="substep-header">
+        <span class="chevron">▶</span>
+        <span class="substep-title">Cost Attribution (Account + Per-User)</span>
+      </div>
+      <div class="substep-body">
+        <ul>
+          <li><strong>Account-level:</strong> Per-team accounts → Cost Explorer shows each team’s spend</li>
+          <li><strong>Per-user:</strong> Enable "IAM principal-based cost allocation" in Cost Explorer</li>
+          <li>Each Identity Center user gets unique role session → per-user spend visibility</li>
+          <li>⚠️ Principal-based allocation is <strong>visibility only</strong>, not enforcement</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="substep" onclick="this.classList.toggle('open')">
+      <div class="substep-header">
+        <span class="chevron">▶</span>
+        <span class="substep-title">Quota Enforcement (OTel + Counter Store)</span>
+      </div>
+      <div class="substep-body">
+        <ul>
+          <li>Claude Code & Cowork export OTel metrics natively (token usage, cost, sessions per user) <span style="background: #fef3c7; color: #92400e; font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 3px; margin-left: 6px;">Custom implementation needed</span></li>
+          <li>Data flow: Client → OTLP (port 4318) → OTel Collector (ECS Fargate) → CloudWatch/S3</li>
+          <li>Counter store (Redis): aggregate per-user token usage with TTL for auto-reset</li>
+          <li><strong>Alert only:</strong> SNS notification when threshold exceeded (15 min lag)</li>
+          <li><strong>Soft block:</strong> Lambda updates IAM deny policy (15-30 min)</li>
+          <li><strong>Hard block:</strong> Proxy checks Redis pre-request (real-time)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="substep" onclick="this.classList.toggle('open')">
+      <div class="substep-header">
+        <span class="chevron">▶</span>
+        <span class="substep-title">Recommended CloudWatch Alarms</span>
+      </div>
+      <div class="substep-body">
+        <ul>
+          <li><code>InvocationThrottles > 10</code> in 5 minutes (quota exhaustion)</li>
+          <li><code>InvocationErrors > 5%</code> error rate (configuration issues)</li>
+          <li>Monthly cost exceeds 80% of budget threshold</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="nav-btn" onclick="showBedrockSection('sops')">← SOPs</button>
+      <button class="nav-btn" onclick="showBedrockSection('security')">Security & Compliance →</button>
+    </div>
+  </div>
+
+  <!-- Bedrock: Security -->
+  <div class="bedrock-section" id="bsec-security" style="display:none">
+    <div class="section-heading">
+      <h2>Security & Compliance</h2>
+      <p>Data handling, guardrails, network security, and audit controls.</p>
+    </div>
+
+    <div class="substep open" onclick="this.classList.toggle('open')">
+      <div class="substep-header">
+        <span class="chevron">▶</span>
+        <span class="substep-title">Data Handling</span>
+      </div>
+      <div class="substep-body">
+        <ul>
+          <li>All prompts/completions flow through AWS Bedrock — Anthropic does not store or access them</li>
+          <li>Data stays within AWS security boundary (your VPC/account)</li>
+          <li>Anthropic does NOT train models on your data via Bedrock</li>
+          <li>Zero Data Retention (ZDR) available — nothing stored after request completes</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="substep" onclick="this.classList.toggle('open')">
+      <div class="substep-header">
+        <span class="chevron">▶</span>
+        <span class="substep-title">Bedrock Guardrails</span>
+      </div>
+      <div class="substep-body">
+        <ul>
+          <li>Create Guardrails in Bedrock console: content filtering, PII redaction, topic blocking</li>
+          <li>Safeguards: content filters, denied topics, word filters, sensitive information filters, contextual grounding</li>
+          <li>⚠️ Do NOT enable automated reasoning policy — unsupported, causes runtime failures</li>
+          <li><strong>Cross-account enforcement:</strong> AWS Organizations Bedrock policies apply guardrails across all team accounts</li>
+          <li>Create guardrail in management account → version it → attach resource-based policy → enable Bedrock Policy Type → attach to Claude OU</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="substep" onclick="this.classList.toggle('open')">
+      <div class="substep-header">
+        <span class="chevron">▶</span>
+        <span class="substep-title">Network Security</span>
+      </div>
+      <div class="substep-body">
+        <ul>
+          <li>Consider AWS PrivateLink for Bedrock endpoints (keeps traffic off public internet)</li>
+          <li>Use sandbox network allowlists in Claude Code/Cowork</li>
+          <li>Ensure corporate firewall allows required AWS endpoint traffic</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="substep" onclick="this.classList.toggle('open')">
+      <div class="substep-header">
+        <span class="chevron">▶</span>
+        <span class="substep-title">Audit & Compliance</span>
+      </div>
+      <div class="substep-body">
+        <ul>
+          <li>CloudTrail: complete audit trail with user identity</li>
+          <li>IAM Identity Center sessions traceable to Entra ID users</li>
+          <li>Bedrock invocation logs capture full request/response</li>
+          <li>Managed settings prevent bypassing organizational controls</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="nav-btn" onclick="showBedrockSection('monitoring')">← Monitoring</button>
+      <button class="nav-btn hidden">Next →</button>
+    </div>
+  </div>
+
+  
+      </div>
+    </div>
+  </div>
+
+  <!-- Bedrock: CCWB -->
+  <div class="tab-content" id="content-bedrock-ccwb" style="display:none">
+    <div class="bedrock-layout">
+      <div class="bedrock-left-nav" id="ccwb-left-nav">
+        <div class="bedrock-nav-item active" data-ccwb="prerequisites" onclick="showCcwbSection('prerequisites')">Prerequisites</div>
+        <div class="bedrock-nav-item" data-ccwb="iam-idc-config" onclick="showCcwbSection('iam-idc-config')">Configure IAM Identity Center</div>
+        <div class="bedrock-nav-item" data-ccwb="ccwb-init" onclick="showCcwbSection('ccwb-init')">Initialize Profile (ccwb init)</div>
+        <div class="bedrock-nav-item" data-ccwb="ccwb-deploy" onclick="showCcwbSection('ccwb-deploy')">Deploy Infrastructure (ccwb deploy)</div>
+        <div class="bedrock-nav-item" data-ccwb="ccwb-package" onclick="showCcwbSection('ccwb-package')">Build & Distribute (ccwb package)</div>
+        <div class="bedrock-nav-item" data-ccwb="mdm-deploy" onclick="showCcwbSection('mdm-deploy')">MDM Deployment (CoWork)</div>
+        <div class="bedrock-nav-item" data-ccwb="dev-setup" onclick="showCcwbSection('dev-setup')">Developer Setup</div>
+        <div class="bedrock-nav-item" data-ccwb="observability" onclick="showCcwbSection('observability')">Observability</div>
+        <div class="bedrock-nav-item" data-ccwb="monitoring" onclick="showCcwbSection('monitoring')">Monitoring</div>
+        <div class="bedrock-nav-item" data-ccwb="quota" onclick="showCcwbSection('quota')">Quota Management</div>
+      </div>
+      <div class="bedrock-content">
+
+        <!-- Prerequisites -->
+        <div class="bedrock-section" id="ccwb-prerequisites" style="display:block">
+          <h2>Prerequisites & Environment Setup</h2>
+          <p>What you need before deploying CCWB with IAM Identity Center.</p>
+          <div class="info-callout" style="margin-bottom:16px">
+            <strong>Stakeholder:</strong> AWS Admin / Cloud Team
+          </div>
+          <h3>Software Requirements (Admin Machine)</h3>
+          <ul class="step-detail-list">
+            <li>Python 3.10–3.13</li>
+            <li>Poetry (dependency management)</li>
+            <li>AWS CLI v2</li>
+            <li>Git</li>
+            <li>Go 1.23+ (for cross-platform binary builds)</li>
+          </ul>
+          <h3>AWS Requirements</h3>
+          <ul class="step-detail-list">
+            <li>AWS account with IAM/CloudFormation permissions</li>
+            <li>Amazon Bedrock activated in target regions</li>
+            <li>IAM Identity Center active with users/groups provisioned</li>
+            <li>(Optional) ECS, CloudWatch, Athena, Glue, Lambda, Firehose permissions — for monitoring/analytics</li>
+          </ul>
+          <h3>End User Requirements</h3>
+          <ul class="step-detail-list">
+            <li>Claude Code installed (for CLI users)</li>
+            <li>Claude Desktop installed (for CoWork users)</li>
+            <li>Web browser for SSO authentication</li>
+            <li>No Python/Poetry/Git needed — users get pre-built packages</li>
+          </ul>
+        </div>
+
+        <!-- IAM Identity Center Config -->
+        <div class="bedrock-section" id="ccwb-iam-idc-config" style="display:none">
+          <h2>Configure IAM Identity Center</h2>
+          <p>Set up the native AWS identity path — no external IdP required.</p>
+          <div class="info-callout" style="margin-bottom:16px">
+            <strong>Stakeholder:</strong> AWS Admin / Identity Team
+          </div>
+          <ul class="step-detail-list">
+            <li><strong>Verify IAM Identity Center is enabled</strong> — Navigate to AWS IAM Identity Center console and confirm it's active in your management account</li>
+            <li><strong>Provision users/groups</strong> — Ensure developers who need Claude access exist in IAM Identity Center (synced from AD/Okta/external source or manually created)</li>
+            <li><strong>Create Permission Set for Bedrock access</strong> — Create a Permission Set with <code>bedrock:InvokeModel*</code> permissions scoped to target regions</li>
+            <li><strong>Assign Permission Set to user/group</strong> — Assign the Permission Set to developer groups on the target AWS account</li>
+            <li><strong>Set session duration</strong> — Recommended: 7 days (max: 90 days) to minimize re-authentication friction</li>
+            <li><strong>Distribute SSO start URL</strong> — Share the SSO portal URL and profile name with developers (e.g., <code>aws sso login --profile bedrock-dev</code>)</li>
+          </ul>
+          <div class="info-callout">
+            <strong>💡 Key benefit:</strong> With IAM Identity Center, the CCWB solution auto-detects user identity from the <code>AWSReservedSSO_*</code> role ARN — full attribution (name, email, permission set) appears in the observability dashboard without any extra OIDC configuration.
+          </div>
+        </div>
+
+        <!-- ccwb init -->
+        <div class="bedrock-section" id="ccwb-ccwb-init" style="display:none">
+          <h2>Initialize Profile (<code>ccwb init</code>)</h2>
+          <p>Clone the repo and run the interactive setup wizard to create a deployment profile.</p>
+          <div class="info-callout" style="margin-bottom:16px">
+            <strong>Stakeholder:</strong> AWS Admin / Cloud Team
+          </div>
+          <div class="info-callout" style="margin-bottom:16px; background:#f0fdf4; border-color:#bbf7d0; color:#166534">
+            <strong>What is <code>ccwb</code>?</strong> — CCWB (Claude Code WorkBench) is the CLI tool from the <a href="https://github.com/aws-solutions-library-samples/guidance-for-claude-code-with-amazon-bedrock" target="_blank">AWS Solutions guidance repo</a>. It orchestrates the full deployment lifecycle: <code>init</code> creates a local profile, <code>deploy</code> provisions CloudFormation stacks, <code>package</code> builds platform-specific installers, and <code>distribute</code> shares them with end users.
+          </div>
+          <h3>Clone & Install</h3>
+          <div class="code-block-wrapper"><pre><code>git clone https://github.com/aws-solutions-library-samples/guidance-for-claude-code-with-amazon-bedrock
+cd guidance-for-claude-code-with-amazon-bedrock/source
+poetry install</code></pre><button class="copy-btn" onclick="copyCode(this)">⧉ Copy</button></div>
+          <h3>Run the Wizard</h3>
+          <div class="code-block-wrapper"><pre><code>poetry run ccwb init</code></pre><button class="copy-btn" onclick="copyCode(this)">⧉ Copy</button></div>
+          <h3>Wizard Choices (IAM IDC Path)</h3>
+          <ul class="step-detail-list">
+            <li><strong>Profile name</strong> → e.g. <code>corp-bedrock-prod</code></li>
+            <li><strong>Enable SSO authentication?</strong> → Select <strong>No</strong> (this refers to CCWB's own OIDC auth stack — select No because your users already authenticate via IAM Identity Center)</li>
+            <li><strong>AWS Region</strong> → Region for CloudFormation stacks</li>
+            <li><strong>Stack base name</strong> → Prefix for all stack names (e.g. <code>claude-code-auth</code>)</li>
+            <li><strong>Enable monitoring?</strong> → Yes (recommended) — choose Central Collector or Sidecar</li>
+            <li><strong>Enable analytics?</strong> → Yes for Athena + S3 data lake</li>
+            <li><strong>Enable quota monitoring?</strong> → Yes to enforce per-user token limits</li>
+            <li><strong>Enable Windows builds?</strong> → Yes if you have Windows users</li>
+            <li><strong>Generate CoWork 3P MDM config?</strong> → Yes for Claude Desktop deployment</li>
+            <li><strong>Claude model</strong> → Sonnet / Haiku / Opus</li>
+            <li><strong>Cross-region profile</strong> → US / EU / APAC</li>
+            <li><strong>Source region</strong> → e.g. <code>us-east-1</code></li>
+          </ul>
+          <div class="info-callout">
+            <strong>📝 Note:</strong> <code>ccwb init</code> only saves configuration locally to <code>~/.ccwb/profiles/&lt;name&gt;.json</code>. Nothing is deployed to AWS at this stage.
+          </div>
+        </div>
+
+        <!-- ccwb deploy -->
+        <div class="bedrock-section" id="ccwb-ccwb-deploy" style="display:none">
+          <h2>Deploy Infrastructure (<code>ccwb deploy</code>)</h2>
+          <p>Provision AWS CloudFormation stacks based on your profile configuration.</p>
+          <div class="info-callout" style="margin-bottom:16px">
+            <strong>Stakeholder:</strong> AWS Admin / Cloud Team
+          </div>
+          <div class="info-callout" style="margin-bottom:16px; background:#f0fdf4; border-color:#bbf7d0; color:#166534">
+            <strong>What <code>ccwb deploy</code> does under the hood:</strong> Reads your local profile and creates CloudFormation stacks in your AWS account. Since users already authenticate via IAM Identity Center (<code>aws sso login</code>), there's no need for CCWB to deploy its own auth stack (OIDC Provider / Cognito). It deploys only the monitoring, analytics, and quota stacks you enabled.
+          </div>
+          <div class="code-block-wrapper"><pre><code># Deploy all configured stacks
+poetry run ccwb deploy
+
+# Monitor progress
+poetry run ccwb status</code></pre><button class="copy-btn" onclick="copyCode(this)">⧉ Copy</button></div>
+          <h3>What Gets Created (IAM IDC path)</h3>
+          <ul class="step-detail-list">
+            <li><strong>Monitoring stack</strong> — VPC, ECS Fargate (OTEL collector), ALB, CloudWatch dashboards</li>
+            <li><strong>Analytics stack</strong> — Kinesis Firehose → S3 → Glue → Athena (if enabled)</li>
+            <li><strong>Quota stack</strong> — DynamoDB (limits), Lambda (monitor), SNS (alerts), API Gateway (if enabled)</li>
+            <li><strong>CodeBuild stack</strong> — Windows .exe compilation (if enabled)</li>
+          </ul>
+          <div class="info-callout">
+            <strong>⏱️ Deployment time:</strong> 5–15 minutes depending on which stacks are enabled.
+          </div>
+        </div>
+
+        <!-- ccwb package -->
+        <div class="bedrock-section" id="ccwb-ccwb-package" style="display:none">
+          <h2>Build & Distribute Packages (<code>ccwb package</code>)</h2>
+          <p>Build platform-specific installers and distribute to end users.</p>
+          <div class="info-callout" style="margin-bottom:16px">
+            <strong>Stakeholder:</strong> AWS Admin / Cloud Team
+          </div>
+          <div class="info-callout" style="margin-bottom:16px; background:#f0fdf4; border-color:#bbf7d0; color:#166534">
+            <strong>What <code>ccwb package</code> does:</strong> Compiles the credential-helper binary for each target platform using Go cross-compilation. The binary handles token refresh, OTEL metric reporting, and AWS credential resolution. The resulting installers configure the user's <code>~/.aws/config</code> with a <code>credential_process</code> entry pointing to this binary.
+          </div>
+          <div class="code-block-wrapper"><pre><code># Build all platforms (recommended)
+poetry run ccwb package --go --target-platform all
+
+# Distribute via presigned S3 URLs
+poetry run ccwb distribute</code></pre><button class="copy-btn" onclick="copyCode(this)">⧉ Copy</button></div>
+          <h3>Platform Targets</h3>
+          <ul class="step-detail-list">
+            <li>macOS ARM64 (Apple Silicon M1/M2/M3/M4)</li>
+            <li>macOS Intel (x86_64) — runs on all Macs via Rosetta</li>
+            <li>Linux x86_64 and ARM64</li>
+            <li>Windows x64 (via CodeBuild + Nuitka)</li>
+          </ul>
+          <h3>Distribution Options</h3>
+          <ul class="step-detail-list">
+            <li><strong>Presigned S3 URLs</strong> — Time-limited download links shared via Slack/email</li>
+            <li><strong>Authenticated Landing Page</strong> — Self-service portal with SSO login + platform detection</li>
+            <li><strong>Manual</strong> — Zip the <code>dist/</code> folder and share directly</li>
+          </ul>
+          <h3>Generate CoWork MDM Configs</h3>
+          <div class="code-block-wrapper"><pre><code>poetry run ccwb cowork generate</code></pre><button class="copy-btn" onclick="copyCode(this)">⧉ Copy</button></div>
+          <p style="font-size:13px; color:var(--color-text-secondary); margin-top:8px">Outputs: <code>cowork-3p.mobileconfig</code>, <code>cowork-3p.reg</code>, <code>cowork-3p-config.json</code></p>
+        </div>
+
+        <!-- MDM Deployment -->
+        <div class="bedrock-section" id="ccwb-mdm-deploy" style="display:none">
+          <h2>MDM Deployment (Claude Cowork / Desktop)</h2>
+          <p>Deploy Claude Desktop configuration to end-user machines via MDM.</p>
+          <div class="info-callout" style="margin-bottom:16px">
+            <strong>Stakeholder:</strong> IT Admin / MDM Team
+          </div>
+          <ul class="step-detail-list">
+            <li><strong>macOS</strong> — Deploy <code>cowork-3p.mobileconfig</code> via Jamf / Kandji / Mosyle</li>
+            <li><strong>Windows</strong> — Deploy <code>cowork-3p.reg</code> via Intune / Group Policy (writes to <code>HKCU\SOFTWARE\Policies\Claude</code>)</li>
+            <li><strong>Verify MDM key</strong> — Ensure <code>inferenceBedrockProfile</code> points to the correct AWS named profile in <code>~/.aws/config</code></li>
+            <li><strong>Install order matters</strong> — Users must run the CLI installer (<code>install.sh</code> / <code>install.bat</code>) <em>before</em> opening Claude Desktop, so the named profile exists</li>
+          </ul>
+          <div class="info-callout">
+            <strong>⚠️ macOS note:</strong> Unsigned profiles require user approval in System Settings → Privacy & Security → Profiles after delivery.
+          </div>
+        </div>
+
+        <!-- Developer Setup -->
+        <div class="bedrock-section" id="ccwb-dev-setup" style="display:none">
+          <h2>Developer Setup</h2>
+          <p>End-user steps to get Claude Code / Claude Cowork working.</p>
+          <div class="info-callout" style="margin-bottom:16px">
+            <strong>Stakeholder:</strong> End Users / Developers
+          </div>
+          <h3>Claude Code (CLI)</h3>
+          <ul class="step-detail-list">
+            <li>Run the installer package provided by IT admin (<code>install.sh</code> or <code>install.bat</code>)</li>
+            <li>Authenticate with IAM Identity Center: <code>aws sso login --profile &lt;profile-name&gt;</code></li>
+            <li>Start using Claude Code — credentials auto-refresh from IAM Identity Center session</li>
+          </ul>
+          <h3>Claude Cowork (Desktop)</h3>
+          <ul class="step-detail-list">
+            <li>Ensure installer has been run (sets up AWS named profile)</li>
+            <li>Open Claude Desktop — authentication is handled automatically by the credential helper</li>
+            <li>Full Claude Desktop capabilities: Projects, Artifacts, MCP servers</li>
+          </ul>
+          <div class="info-callout">
+            <strong>💡 No API keys needed:</strong> Developers authenticate with their existing corporate credentials via <code>aws sso login</code>. Temporary credentials are issued and refreshed automatically.
+          </div>
+        </div>
+
+        <!-- Observability -->
+        <div class="bedrock-section" id="ccwb-observability" style="display:none">
+          <h2>Observability</h2>
+          <p>End-to-end visibility into Claude usage across your organization.</p>
+          <div class="info-callout" style="margin-bottom:16px">
+            <strong>Stakeholder:</strong> Platform / DevOps Team
+          </div>
+          <h3>Architecture</h3>
+          <ul class="step-detail-list">
+            <li><strong>OpenTelemetry (OTLP)</strong> — Credential helper emits metrics on every Bedrock call (tokens, latency, model, user identity)</li>
+            <li><strong>Central Collector (ECS Fargate)</strong> — Receives OTLP from all developer machines, exports to CloudWatch EMF + Firehose</li>
+            <li><strong>Sidecar Collector (local)</strong> — Runs on each dev machine, lighter footprint, no VPC needed</li>
+          </ul>
+          <h3>Identity Attribution (IAM IDC)</h3>
+          <ul class="step-detail-list">
+            <li>IAM Identity Center users: real username/email auto-extracted from <code>AWSReservedSSO_*</code> role ARN</li>
+            <li>IAM users: username extracted from IAM user ARN</li>
+            <li>Non-SSO assumed roles: hashed anonymous identifier (consistent per principal)</li>
+          </ul>
+          <h3>Analytics Pipeline (Optional)</h3>
+          <ul class="step-detail-list">
+            <li>Kinesis Data Firehose → S3 data lake → Glue Data Catalog → Athena</li>
+            <li>10 pre-built SQL queries for historical analysis</li>
+            <li>90-day hot storage + Glacier archival</li>
+            <li>Use for: chargeback, cost attribution by team/department, trend analysis</li>
+          </ul>
+        </div>
+
+        <!-- Monitoring -->
+        <div class="bedrock-section" id="ccwb-monitoring" style="display:none">
+          <h2>Monitoring</h2>
+          <p>CloudWatch dashboards and real-time metrics for Claude usage.</p>
+          <div class="info-callout" style="margin-bottom:16px">
+            <strong>Stakeholder:</strong> Platform / DevOps Team
+          </div>
+          <h3>Dashboard Metrics (PromQL)</h3>
+          <ul class="step-detail-list">
+            <li><strong>Token usage</strong> — Input/output tokens per user, per model, per day</li>
+            <li><strong>Cost tracking</strong> — Estimated cost per user/team based on token consumption</li>
+            <li><strong>Model breakdown</strong> — Usage split across Sonnet / Haiku / Opus</li>
+            <li><strong>Latency</strong> — P50/P95/P99 response times per model</li>
+            <li><strong>Error rates</strong> — Throttling, failures, quota exhaustion</li>
+          </ul>
+          <h3>Infrastructure</h3>
+          <ul class="step-detail-list">
+            <li><strong>Central Collector:</strong> ~$30–50/month (VPC + ECS Fargate + ALB)</li>
+            <li><strong>Sidecar:</strong> $0 server cost (runs locally on each dev machine)</li>
+            <li>HTTPS with custom domain (optional) — ACM cert + Route53</li>
+          </ul>
+          <h3>Enable/Update Monitoring</h3>
+          <div class="code-block-wrapper"><pre><code># Re-run init to enable monitoring later
+poetry run ccwb init
+
+# Deploy just the monitoring stack
+poetry run ccwb deploy monitoring</code></pre><button class="copy-btn" onclick="copyCode(this)">⧉ Copy</button></div>
+        </div>
+
+        <!-- Quota Management -->
+        <div class="bedrock-section" id="ccwb-quota" style="display:none">
+          <h2>Quota Management</h2>
+          <p>Enforce per-user and per-group token limits with alerts and blocking.</p>
+          <div class="info-callout" style="margin-bottom:16px">
+            <strong>Stakeholder:</strong> Platform / FinOps Team
+          </div>
+          <h3>How It Works</h3>
+          <ul class="step-detail-list">
+            <li><strong>DynamoDB table</strong> — Stores per-user/group/default token limits</li>
+            <li><strong>Lambda (every 15 min)</strong> — Checks thresholds via PromQL, sends SNS alerts at 80%, 90%, 100%</li>
+            <li><strong>API Gateway</strong> — Real-time quota check at credential issuance time</li>
+          </ul>
+          <h3>Configuration Options</h3>
+          <ul class="step-detail-list">
+            <li><strong>Monthly token limit</strong> — Default: 225M tokens/user/month</li>
+            <li><strong>Burst buffer</strong> — 5–25% above daily average (default 10%)</li>
+            <li><strong>Daily enforcement</strong> — <code>alert</code> (notify only) or <code>block</code> (deny credentials)</li>
+            <li><strong>Monthly enforcement</strong> — <code>alert</code> or <code>block</code> (recommended: block)</li>
+            <li><strong>Check interval</strong> — 0 min (every request, +200ms) / 30 min (default) / 60 min</li>
+          </ul>
+          <div class="info-callout">
+            <strong>⚠️ Note:</strong> Per-user quota enforcement requires the monitoring stack to be enabled. Without monitoring, only aggregate limits are possible.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Platform: Overview -->
+  <div class="tab-content" id="content-platform-overview" style="display:none">
+    <div class="hero">
+      <h2>Claude Platform on AWS</h2>
+      <p>Deploy the Claude Platform on your AWS infrastructure. Full control over networking, data residency, and scaling — ideal for regulated environments requiring VPC isolation.</p>
+    </div>
+    <div class="placeholder-grid">
+      <div class="placeholder-card">🖥️<br>Infrastructure Setup<br><small>Coming soon</small></div>
+      <div class="placeholder-card">🌐<br>Networking & VPC<br><small>Coming soon</small></div>
+      <div class="placeholder-card">⚙️<br>Configuration<br><small>Coming soon</small></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+
+// Theme toggle
+function toggleTheme() {
+  var body = document.body;
+  var btn = document.getElementById('themeToggle');
+  if (body.classList.contains('dark')) {
+    body.classList.remove('dark');
+    btn.innerHTML = '☀️ Light';
+  } else {
+    body.classList.add('dark');
+    btn.innerHTML = '🌙 Dark';
+  }
+}
+
+
+// Bedrock Prerequisites step switching
+function showBPStep(stepId) {
+  try {
+    var steps = document.querySelectorAll('#bsec-prerequisites .step-content');
+    for (var i = 0; i < steps.length; i++) { steps[i].style.display = 'none'; }
+    var target = document.getElementById(stepId);
+    if (target) target.style.display = 'block';
+    var items = document.querySelectorAll('#bedrock-prereq-sidebar .step-sidebar-item');
+    for (var i = 0; i < items.length; i++) { items[i].classList.remove('active'); }
+    var activeItem = document.querySelector('[data-step="' + stepId + '"]');
+    if (activeItem) activeItem.classList.add('active');
+  } catch(e) { console.error(e); }
+}
+
+
+// Bedrock section switching (left nav)
+function showBedrockSection(secId) {
+  try {
+    var sections = document.querySelectorAll('#content-bedrock-manual-config .bedrock-section');
+    for (var i = 0; i < sections.length; i++) { sections[i].style.display = 'none'; }
+    var target = document.getElementById('bsec-' + secId);
+    if (target) target.style.display = 'block';
+    var items = document.querySelectorAll('#bedrock-left-nav .bedrock-nav-item');
+    for (var i = 0; i < items.length; i++) { items[i].classList.remove('active'); }
+    var activeItem = document.querySelector('[data-bsec="' + secId + '"]');
+    if (activeItem) activeItem.classList.add('active');
+  } catch(e) { console.error(e); }
+}
+
+
+// CCWB section switching (left nav)
+function showCcwbSection(secId) {
+  try {
+    var sections = document.querySelectorAll('#content-bedrock-ccwb .bedrock-section');
+    for (var i = 0; i < sections.length; i++) { sections[i].style.display = 'none'; }
+    var target = document.getElementById('ccwb-' + secId);
+    if (target) target.style.display = 'block';
+    var items = document.querySelectorAll('#ccwb-left-nav .bedrock-nav-item');
+    for (var i = 0; i < items.length; i++) { items[i].classList.remove('active'); }
+    var activeItem = document.querySelector('[data-ccwb="' + secId + '"]');
+    if (activeItem) activeItem.classList.add('active');
+  } catch(e) { console.error(e); }
+}
+
+// Copy code to clipboard
+function copyCode(btn) {
+  try {
+    var wrapper = btn.closest('.code-block-wrapper');
+    if (!wrapper) return;
+    var code = wrapper.querySelector('pre').textContent;
+    var fallback = function() {
+      try {
+        var textarea = document.createElement('textarea');
+        textarea.value = code;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+      } catch(ex) {}
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(code).then(function() {}, fallback);
+    } else {
+      fallback();
+    }
+    btn.innerHTML = '✓ Copied';
+    btn.classList.add('copied');
+    setTimeout(function() { btn.innerHTML = '⧉ Copy'; btn.classList.remove('copied'); }, 2000);
+  } catch(e) { console.error(e); }
+}
+
+// Toggle code collapsible
+function toggleCode(el) {
+  el.closest('.code-collapsible').classList.toggle('open');
+}
+
+// Navigation helper
+function navigateTo(subtabId) {
+  try {
+    var btn = document.querySelector('[data-subtab="' + subtabId + '"]');
+    if (btn) btn.click();
+  } catch(e) { console.error(e); }
+}
+
+// Admin step switching
+function showAdminStep(stepId) {
+  try {
+    var container = document.getElementById('admin-step-sidebar').closest('.guided-layout');
+    var steps = container.querySelectorAll('.step-content');
+    for (var i = 0; i < steps.length; i++) { steps[i].style.display = 'none'; }
+    var target = document.getElementById(stepId);
+    if (target) target.style.display = 'block';
+    var items = document.getElementById('admin-step-sidebar').querySelectorAll('.step-sidebar-item');
+    for (var i = 0; i < items.length; i++) { items[i].classList.remove('active'); }
+    var activeItem = document.querySelector('[data-step="' + stepId + '"]');
+    if (activeItem) activeItem.classList.add('active');
+  } catch(e) { console.error(e); }
+}
+
+(function() {
+  // Main tab switching
+  var mainTabs = document.querySelectorAll('.main-tab');
+  for (var t = 0; t < mainTabs.length; t++) {
+    (function(tab) {
+      tab.addEventListener('click', function() {
+        var tabId = tab.getAttribute('data-tab');
+        var allTabs = document.querySelectorAll('.main-tab');
+        for (var i = 0; i < allTabs.length; i++) { allTabs[i].classList.remove('active'); }
+        tab.classList.add('active');
+        var bars = document.querySelectorAll('.subtab-bar');
+        for (var i = 0; i < bars.length; i++) { bars[i].style.display = 'none'; }
+        document.getElementById('subtabs-' + tabId).style.display = 'flex';
+        var contents = document.querySelectorAll('.tab-content');
+        for (var i = 0; i < contents.length; i++) { contents[i].style.display = 'none'; }
+        var firstSubtab = document.querySelector('#subtabs-' + tabId + ' .subtab');
+        if (firstSubtab) {
+          var subs = document.querySelectorAll('#subtabs-' + tabId + ' .subtab');
+          for (var i = 0; i < subs.length; i++) { subs[i].classList.remove('active'); }
+          firstSubtab.classList.add('active');
+          document.getElementById('content-' + firstSubtab.getAttribute('data-subtab')).style.display = 'block';
+        }
+      });
+    })(mainTabs[t]);
+  }
+
+  // Sub-tab switching
+  var subtabs = document.querySelectorAll('.subtab');
+  for (var t = 0; t < subtabs.length; t++) {
+    (function(subtab) {
+      subtab.addEventListener('click', function() {
+        var parent = subtab.closest('.subtab-bar');
+        var siblings = parent.querySelectorAll('.subtab');
+        for (var i = 0; i < siblings.length; i++) { siblings[i].classList.remove('active'); }
+        subtab.classList.add('active');
+        var tabId = parent.id.replace('subtabs-', '');
+        var contents = document.querySelectorAll('.tab-content');
+        for (var i = 0; i < contents.length; i++) {
+          if (contents[i].id.indexOf('content-' + tabId) === 0) contents[i].style.display = 'none';
+        }
+        document.getElementById('content-' + subtab.getAttribute('data-subtab')).style.display = 'block';
+      });
+    })(subtabs[t]);
+  }
+
+  // Show first content on load
+  var first = document.getElementById('content-enterprise-subscribe');
+  if (first) first.style.display = 'block';
+})();
+</script>
+</body>
+</html>
